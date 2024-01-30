@@ -100,7 +100,7 @@ public class Automate {
      * @return Cellule une cellule de l'automate
      */
     public Cellule getCelluleFromPosition(int x, int y) {
-    	return cellules.get(y*longueur+x);
+    	return cellules.get(y*longueur+x); 
     }
     
     /**
