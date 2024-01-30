@@ -21,9 +21,9 @@ public class Automate {
      * @param largeur de la grille
      */
     public Automate(int d, ArrayList<State> states, int voisins[][], int longueur, int largeur) {
-        this.d = 0;
+        this.d = 0; 
         this.states = states;
-        this.voisins = voisins;
+        this.voisins = voisins; 
         this.longueur=longueur;
         this.largeur=largeur;
     }
