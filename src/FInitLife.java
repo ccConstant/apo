@@ -1,10 +1,9 @@
-import javax.swing.*;
-import java.awt.*;
-import java.io.Serializable;
+import java.awt.BorderLayout;
 
-public class FGrille extends JFrame{/* implements Serializable{
-	
-	private static final long serialVersionUID = 2L;*/
+import javax.swing.JButton;
+import javax.swing.JFrame;
+
+public class FInitLife extends JFrame{
 
     private int rows;
     private int cols;
@@ -15,48 +14,54 @@ public class FGrille extends JFrame{/* implements Serializable{
     private DessinGrille dg;
     
     private SimulationLifeGame sim;
-
-    public FGrille(Controller c, int rows, int cols, SimulationLifeGame sim) {
+    
+	public FInitLife(Controller c, int cols, int rows) {
         this.c = c;
         this.rows = rows;
         this.cols = cols;
         this.gridWidth = 400; 
         this.gridHeight = 400; 
-        
-        this.sim = sim;
 
         setTitle("Grille paramétrée");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(440, 480);
         setLocationRelativeTo(c.getAccueil());
+        
+        sim = new SimulationLifeGame();
+        sim.init_simulation(rows, cols);
 
         elementFenetre();
 
         setVisible(true);
         
-
-    }
-
-    public void elementFenetre() {
+	}
+	public void elementFenetre() {
         this.getContentPane().setLayout(new BorderLayout());
         
-        dg = new DessinGrille(cols, rows, gridWidth, gridHeight, sim.getAutomate());
+        dg = new DessinGrille(rows, cols, gridWidth, gridHeight, sim.getAutomate());
         dg.setFocusable(true);
+        dg.addMouseListener(new ClickIniListener(c));
         add(dg, BorderLayout.CENTER);
 
-        JButton opt = new JButton("Options");
-        opt.addActionListener(new OptListener(c));
-        add(opt, BorderLayout.NORTH);
+        JButton opt = new JButton("Lancer la simulation");
+        opt.addActionListener(new LancerListener(c));
+        add(opt, BorderLayout.SOUTH);
     }
-    
+	
     public DessinGrille getDessin() {
     	return dg;
     }
-
+    
 	public SimulationLifeGame getSimu() {
 		
 		return sim;
 	}
+	
+	public int getRows() {
+		return rows;
+	}
     
-    
+	public int getCols() {
+		return cols;
+	}
 }

@@ -12,27 +12,28 @@ public class DessinGrille extends JPanel { /* implements Serializable{
     private int startY;
     private int gridWidth;
     private int gridHeight;
-    SimulationForestFire f;
+    
+    private Automate a;
 
-    public DessinGrille(int rows, int cols, int startX, int startY, int gridWidth, int gridHeight, SimulationForestFire f) {
+    private int cellSize;
+    
+    public DessinGrille(int cols, int rows, int gridWidth, int gridHeight, Automate a) {
         this.rows = rows;
         this.cols = cols;
-        this.startX = startX;
-        this.startY = startY;
+        this.startX = 10;
+        this.startY = 10;
         this.gridWidth = gridWidth;
         this.gridHeight = gridHeight;
-        this.f = f;
+        this.a = a;
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        Automate a = f.getAutomate();
         
         // Calculer la longueur et la largeur de la cellule selon les dimensions de la grille
-        int widthMax = gridWidth / cols;
-        int heightMax = gridHeight / rows;
-        int cellSize;
+        int widthMax = gridWidth / rows;
+        int heightMax = gridHeight / cols;
         if (widthMax > heightMax) {
         	cellSize = heightMax;
         }else {
@@ -40,12 +41,12 @@ public class DessinGrille extends JPanel { /* implements Serializable{
         }
 
         // Dessiner les lignes de la grille dans l'aire spécifique 
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
+        for (int i = 0; i < cols; i++) {
+            for (int j = 0; j < rows; j++) {
             	int x = startX + j * cellSize;
                 int y = startY + i * cellSize;
                 
-            	Cellule c = a.getCelluleFromPosition(i, j);
+            	Cellule c = a.getCelluleFromPosition(j, i);
                 State s = c.getCurrentState();
                 Color col = new Color(s.getR(), s.getG(), s.getB());
                 g.setColor(col);
@@ -57,7 +58,19 @@ public class DessinGrille extends JPanel { /* implements Serializable{
         }
     }
     
-    public SimulationForestFire getAuto() {
-    	return f;
+    public Automate getAuto() {
+    	return a;
+    }
+    
+    public int getCellSize() {
+    	return cellSize;
+    }
+    
+    public int getrows() {
+    	return rows;
+    }
+    
+    public int getcols() {
+    	return cols;
     }
 }
