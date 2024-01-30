@@ -32,14 +32,13 @@ public class Automate {
      * Affiche un automate : pour cela on affiche toutes les cellules de l'automate en question 
      */
     public void print() { 
-        for (int i=1 ; i<=cellules.size(); i++) {
-        	if (i%(longueur)==0) {
+    	for (int i=1 ; i<=cellules.size(); i++) {
+        	if (i%(largeur)==0) {
         		System.out.println(cellules.get(i-1).toString());
         	}else {
         		System.out.print(cellules.get(i-1).toString());
         	}
         }
-        
     }
     
     /** 
@@ -100,7 +99,7 @@ public class Automate {
      * @return Cellule une cellule de l'automate
      */
     public Cellule getCelluleFromPosition(int x, int y) {
-    	return cellules.get(y*longueur+x);
+    	return cellules.get(y*largeur+x);
     }
     
     /**
@@ -114,7 +113,7 @@ public class Automate {
     	for (int i=0 ; i<nombreVoisins ; i++) {
     		int abscisse=position[0]+voisins[i][0]; 
     		int ordonnee= position[1]+voisins[i][1] ; 
-    		if (abscisse >=0 && ordonnee >=0 && abscisse<10 && ordonnee<10 ) {
+    		if (abscisse >=0 && ordonnee >=0 && abscisse<largeur && ordonnee<longueur ) {
     			Cellule a=getCelluleFromPosition(position[0]+voisins[i][0], position[1]+voisins[i][1]); 
     			cellulesVoisines.add(a);
     		}

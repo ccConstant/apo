@@ -13,7 +13,7 @@ public class SimulationForestFire {
      * @param nbrVoisins nombre de voisins à prendre en compte pour une cellule : 4 ou 8 
      * 
      */
-	public void init_simulation(int nbrFeu, int rows, int col, boolean proba, int nbrVoisins) {
+	public void init_simulation(int nbrFeu, int rows, int col) { //boolean proba, int nbrVoisins
 		State vide=new State("vide", 80, 80, 80, false);
 		State feu=new State("en feu", 80, 8, 8, false);
 		State brule=new State("brûlé", 0,0,0, false);
