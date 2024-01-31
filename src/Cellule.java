@@ -67,7 +67,7 @@ public class Cellule{
      * Rechargement de la cellule dans le cas du feu de forêt
      * @param a automate auquel appartient la cellule
      */
-    public void rechargementForet(Automate a) {
+    public void rechargementForet(Automate a, boolean proba, double p, double q) {
     	setNextState(a.getStates().get(0));
     	
     	//Si l'état actuel est 0, on reste dans l'état 0 
@@ -79,13 +79,27 @@ public class Cellule{
     	// Si l'état actuel est forêt, on va regarder si on a des voisins en feu
     	if (this.currentState.getState()==a.getStates().get(1).getState()) {
     		int cpt=a.nbrVoisinsInState(a.getStates().get(2), this);
+    		
+    		//si nous ne sommes pas dans le cas probabiliste 
+    		if (!proba) {
     	    	
-    		//Si on a pas de voisins en feu, la case reste forêt
-    		if (cpt==0) {
-    			setNextState(a.getStates().get(1));
-    		//Si on a au moins un voisin en feu, le prochain état de la case sera en feu 
+	    		//Si on a pas de voisins en feu, la case reste forêt
+	    		if (cpt==0) {
+	    			setNextState(a.getStates().get(1));
+	    		//Si on a au moins un voisin en feu, le prochain état de la case sera en feu 
+	    		}else {
+	    			setNextState(a.getStates().get(2));
+	    		}
+	    	//cas probabiliste
     		}else {
-    			setNextState(a.getStates().get(2));
+    			double calculProba=cpt*p+q ; 
+    			double number=Math.random();
+    			if (number<calculProba) {
+    				setNextState(a.getStates().get(2));
+    			}else {
+    				setNextState(a.getStates().get(1));
+    			}
+    			
     		}
     	}
     	

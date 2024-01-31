@@ -139,6 +139,22 @@ public class Automate {
 		
     }
     
+    
+    /**
+     * Calcule le nombre de cellules de l'automate s qui sont dans l'état s
+     * @param s état dans lequel se trouve les cellules comptabilisées
+     * @return int le nombre de cellules de l'automate se trouvant dans l'état s 
+     */
+    public int nbrCellulesInState(State s) {
+		int cpt=0 ; 
+		for (Cellule cellule : cellules) {
+			if (cellule.getCurrentState().getState()==s.getState()) {
+				cpt++;
+			}
+		}
+		return cpt ; 
+		
+    }
 
     /**
      * Calcule la position des 9 voisins
