@@ -1,11 +1,15 @@
 import java.awt.Component;
 import java.util.ArrayList;
 
+import javax.swing.JButton;
+
 public class Controller {
 
 	private FenetreAccueil fa;
 	private FGrille fg;
 	private FInitLife fi;
+	
+	private ReloadTimer rt;
 	
 	public Controller() {
 		fa = new FenetreAccueil(this);
@@ -31,13 +35,31 @@ public class Controller {
 		int x = fa.getValX();
 		int y = fa.getValY();
 		int z = fa.getValZ();
+		
+		int tps = fa.getTps();
+		int ite = fa.getIte();
+		rt = new ReloadTimer(tps, ite, this);
 		fi = new FInitLife(this, x, y);
 		
 	}
 
-	public void parametre() {
+	public void reload() {
 		fg.getSimu().rechargement();
 		fg.getDessin().repaint();
+		
+	}
+	
+	public void pause(JButton ps) {
+		if(rt.getPaused()) {
+			rt.resumeReload();
+			ps.setText("Pause");
+		}else {
+			rt.pauseReload();
+			ps.setText("Reprendre");
+		}
+	}
+	
+	public void parametre() {
 		
 	}
 	
@@ -63,6 +85,9 @@ public class Controller {
 		int y = fa.getValY();
 		int z = fa.getValZ();
 		fg = new FGrille(this, x, y, fi.getSimu());
+		rt.startReload();
 		
 	}
+	
+
 }

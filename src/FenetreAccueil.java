@@ -121,6 +121,12 @@ public class FenetreAccueil extends JFrame{
 	public int getValZ() {
 		return slZ.getValue();
 	}
-
+	
+	public int getIte() {
+		return Integer.parseInt(tfIte.getText());
+	}
+	public int getTps() {
+		return Integer.parseInt(tfTmp.getText());
+	}
 	
 }

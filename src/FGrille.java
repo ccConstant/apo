@@ -44,9 +44,9 @@ public class FGrille extends JFrame{/* implements Serializable{
         dg.setFocusable(true);
         add(dg, BorderLayout.CENTER);
 
-        JButton opt = new JButton("Options");
-        opt.addActionListener(new OptListener(c));
-        add(opt, BorderLayout.NORTH);
+        JButton ps = new JButton("Reprendre");
+        ps.addActionListener(new PauseListener(c, ps));
+        add(ps, BorderLayout.SOUTH);
     }
     
     public DessinGrille getDessin() {

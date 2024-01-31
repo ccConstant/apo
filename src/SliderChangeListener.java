@@ -1,4 +1,4 @@
-import javax.swing.JLabel;
+	import javax.swing.JLabel;
 import javax.swing.JSlider;
 import javax.swing.event.*;
 
