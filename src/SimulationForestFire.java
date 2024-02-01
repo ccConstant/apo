@@ -58,7 +58,7 @@ public class SimulationForestFire implements Simulation {
 		}
 		
 		automate.initCellulesHexa(foret);
-		//automate.initCellules(foret);
+		automate.initCellules(foret);
 		this.caseForetDepart=automate.nbrCellulesInState(foret);
 		if (nbrFeu>caseForetDepart) {
 			throw new Error("Le nombre de feu est supérieur au nombre de case Forêt") ; 

@@ -60,32 +60,6 @@ public class Automate {
     }
     
     /** 
-     * Initialise l'état de toutes cellules en mode hexagone de l'automate à l'état passé en paramètre
-     * @param s état que l'on veut attribuer à toutes les cellules de l'automate 
-     */
-    public void initCellulesHexa(State s) {
-		for (int i=0 ; i<longueur; i++) {
-			if (i%2==1) {
-				for (int j=1; j<2*largeur; j+=2) {
-					int position[]=new int[2];
-					position[0]=j;
-					position[1]=i;	
-					Cellule c=new Cellule(s, position);
-					cellules.add(c);
-				}
-			}else {
-				for (int j=0; j<2*largeur; j+=2) {
-					int position[]=new int[2];
-					position[0]=j;
-					position[1]=i;	
-					Cellule c=new Cellule(s, position);
-					cellules.add(c);
-				}
-			}
-		}
-    }
-    
-    /** 
      * Initialise aléatoirement l'état de toutes cellules de l'automate à un des états appartenant à la liste d'états passée en paramètre
      * @param states ArrayList d'états que l'on peut attribuer aux cellules de l'automate
      */
@@ -245,4 +219,30 @@ public class Automate {
 		voisins[4][0]=0;  
 		voisins[4][1]=1;  	
     }
+
+    /** 
+     * Initialise l'état de toutes cellules en mode hexagone de l'automate à l'état passé en paramètre
+     * @param s état que l'on veut attribuer à toutes les cellules de l'automate 
+     */
+	public void initCellulesHexa(State s) {
+		for (int i=0 ; i<longueur; i++) {
+			if (i%2==1) {
+				for (int j=1; j<2*largeur; j+=2) {
+					int position[]=new int[2];
+					position[0]=j;
+					position[1]=i;	
+					Cellule c=new Cellule(s, position);
+					cellules.add(c);
+				}
+			}else {
+				for (int j=0; j<2*largeur; j+=2) {
+					int position[]=new int[2];
+					position[0]=j;
+					position[1]=i;	
+					Cellule c=new Cellule(s, position);
+					cellules.add(c);
+				}
+			}
+		}
+	}
 }
