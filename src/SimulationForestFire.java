@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class SimulationForestFire {//implements Simulation {
+public class SimulationForestFire implements Simulation {
 	
 	Automate automate ; 
 	boolean proba ; 
@@ -8,6 +8,9 @@ public class SimulationForestFire {//implements Simulation {
 	double q ;
 	double foretBrulee ; 
 	int caseForetDepart ; 
+	int nbrIteration ; 
+	String orVent ; 
+	double fv ; 
 	
 	/** 
      * Initialisation de la simulation du feu de forêt 
@@ -18,9 +21,11 @@ public class SimulationForestFire {//implements Simulation {
      * @param proba devons-nous inclure les probabilités ? 
      * @param p : probabilité d'une cellule forêt de prendre feu si au moins 1 de ses voisins est en feu
      * @param q : probabilité d'une cellule forêt de prendre feu si aucun de ses voisins ne sont en feu
+     * @param orVent : origine du vent  
+     * @param fv : force du vent 
      * 
      */
-	public void init_simulation(int nbrFeu, int rows, int col, int nbrVoisins, boolean proba, double p, double q) { //mettre le vent
+	public void init_simulation(int nbrFeu, int rows, int col, int nbrVoisins, boolean proba, double p, double q, String orVent, double fv) { //mettre le vent
 		State vide=new State("vide", 80, 80, 80, false);
 		State feu=new State("en feu", 80, 8, 8, false);
 		State brule=new State("brûlé", 0,0,0, false);
@@ -34,7 +39,10 @@ public class SimulationForestFire {//implements Simulation {
 		this.proba=proba ; 
 		this.p=p;
 		this.q=q;
+		this.orVent=orVent ; 
+		this.fv=fv ; 
 		
+		nbrIteration=0 ; 
 		this.automate=new Automate(2, states, voisins, rows, col); 
 		
 		if (nbrVoisins==4) {
@@ -42,9 +50,11 @@ public class SimulationForestFire {//implements Simulation {
 		}else {
 			automate.position9Voisins2D();
 		}
-		automate.position9Voisins2D();
 		automate.initCellules(foret);
 		this.caseForetDepart=automate.nbrCellulesInState(foret);
+		if (nbrFeu>caseForetDepart) {
+			throw new Error("Le nombre de feu est supérieur au nombre de case Forêt") ; 
+		}
 		boolean find=false;
 		
 		for (int i=0 ; i<nbrFeu ; i++) {
@@ -65,7 +75,7 @@ public class SimulationForestFire {//implements Simulation {
      */
 	public void rechargement() {
 		for(Cellule a : automate.getCellules()) {
-			a.rechargementForet(automate, proba, p,q);
+			a.rechargementForet(automate, proba, p,q, orVent, fv);
 		}
 		for(Cellule a : automate.getCellules()) {
 			a.setCurrentState(a.getNextState());
@@ -74,7 +84,7 @@ public class SimulationForestFire {//implements Simulation {
 		foretBrulee=nbrBrulee*100/caseForetDepart ; 
 		System.out.println(foretBrulee);
 		
-		
+		nbrIteration++ ; 
 		automate.print();
 	}
 	
@@ -92,6 +102,14 @@ public class SimulationForestFire {//implements Simulation {
      */
 	public double getForetBrulee() {
 		return foretBrulee;
+	}
+	
+	/**
+     * Getter du temps de propagation du feu
+     * @return nbrIteration
+     */
+	public double getNbrIteration() {
+		return nbrIteration;
 	}
 		
 }

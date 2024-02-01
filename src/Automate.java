@@ -91,6 +91,22 @@ public class Automate {
     public ArrayList<Cellule> getCellules(){
     	return cellules;
     }
+    
+    /**
+     * Getter de la longueur du cadre
+     * @return int longueur du cadre
+     */
+    public int getLongueur(){
+    	return longueur;
+    }
+    
+    /**
+     * Getter de la largeur du cadre
+     * @return int largeur du cadre
+     */
+    public int getLargeur(){
+    	return largeur;
+    }
 
     /**
      * Getter d'une cellule de l'automate

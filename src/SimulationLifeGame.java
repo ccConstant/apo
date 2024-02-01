@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class SimulationLifeGame {
+public class SimulationLifeGame implements Simulation {
 	Automate automate ; 
 	
 	

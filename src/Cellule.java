@@ -67,7 +67,7 @@ public class Cellule{
      * Rechargement de la cellule dans le cas du feu de forêt
      * @param a automate auquel appartient la cellule
      */
-    public void rechargementForet(Automate a, boolean proba, double p, double q) {
+    public void rechargementForet(Automate a, boolean proba, double p, double q, String orVent, double fv) {
     	setNextState(a.getStates().get(0));
     	
     	//Si l'état actuel est 0, on reste dans l'état 0 
@@ -82,7 +82,6 @@ public class Cellule{
     		
     		//si nous ne sommes pas dans le cas probabiliste 
     		if (!proba) {
-    	    	
 	    		//Si on a pas de voisins en feu, la case reste forêt
 	    		if (cpt==0) {
 	    			setNextState(a.getStates().get(1));
@@ -92,7 +91,119 @@ public class Cellule{
 	    		}
 	    	//cas probabiliste
     		}else {
-    			double calculProba=cpt*p+q ; 
+    			double calculProba=0 ; 
+    			//Ma cellule représente 0;0
+    			//Celle au nord représente 0;-1
+    			int x=this.position[0] ; 
+    			int y=this.position[1]-1 ; 
+    			boolean nordIsFire; 
+    			if (x >=0 && y >=0 && x<a.getLargeur() && y<a.getLongueur() ) {
+    				Cellule nord=a.getCelluleFromPosition(x, y);
+    				nordIsFire=nord.getCurrentState().equals(a.getStates().get(2));
+    			}else {
+    				nordIsFire=false ; 
+    			}
+    			//Celle au sud représente 0;+1
+    			x=this.position[0] ; 
+    			y=this.position[1]+1 ;
+    			boolean sudIsFire;
+    			if (x >=0 && y >=0 && x<a.getLargeur() && y<a.getLongueur() ) {
+    				Cellule sud=a.getCelluleFromPosition(x, y);
+    				sudIsFire=sud.getCurrentState().equals(a.getStates().get(2));
+    			}else {
+    				sudIsFire=false ; 
+    			}
+    			
+    			//Celle à l'est représente 1;0
+    			x=this.position[0]+1 ; 
+    			y=this.position[1] ;
+    			boolean estIsFire;
+    			if (x >=0 && y >=0 && x<a.getLargeur() && y<a.getLongueur() ) {
+    				Cellule est=a.getCelluleFromPosition(x, y);
+    				estIsFire=est.getCurrentState().equals(a.getStates().get(2));
+    			}else {
+    				estIsFire=false ; 
+    			}
+    		
+    			//Celle à l'ouest représente -1;0
+    			
+    			x=this.position[0]-1 ; 
+    			y=this.position[1] ;
+    			boolean ouestIsFire;
+    			if (x >=0 && y >=0 && x<a.getLargeur() && y<a.getLongueur() ) {
+    				Cellule ouest=a.getCelluleFromPosition(x, y);
+    				ouestIsFire=ouest.getCurrentState().equals(a.getStates().get(2));
+    			}else {
+    				ouestIsFire=false ; 
+    			}
+    			boolean vent=true;
+    			switch(orVent) {
+	    			case "Nord":
+	    				if (nordIsFire) {
+	    					calculProba+=fv+p ; 
+	    				}
+	    				if (sudIsFire) {
+	    					calculProba+=p-fv ;
+	    				}
+	    				if (estIsFire) {
+	    					calculProba+=p ;
+	    				}
+	    				if (ouestIsFire) {
+	    					calculProba+=p ;
+	    				}
+	    				break ; 
+	    			case "Sud" :
+	    				if (sudIsFire) {
+	    					calculProba+=p+fv ;
+	    				}
+	    				if (nordIsFire) {
+	    					calculProba+=p-fv ; 
+	    				}
+	    				if (estIsFire) {
+	    					calculProba+=p ;
+	    				}
+	    				if (ouestIsFire) {
+	    					calculProba+=p ;
+	    				}
+	    				break ; 
+	    				
+	    			case "Est":
+	    				if (sudIsFire) {
+	    					calculProba+=p ;
+	    				}
+	    				if (nordIsFire) {
+	    					calculProba+=p ; 
+	    				}
+	    				if (estIsFire) {
+	    					calculProba+=p+fv ;
+	    				}
+	    				if (ouestIsFire) {
+	    					calculProba+=p-fv ;
+	    				}
+	    				break ;
+	    				
+	    			case "Ouest" : 
+	    				if (sudIsFire) {
+	    					calculProba+=p ;
+	    				}
+	    				if (nordIsFire) {
+	    					calculProba+=p ; 
+	    				}
+	    				if (estIsFire) {
+	    					calculProba+=p-fv ;
+	    				}
+	    				if (ouestIsFire) {
+	    					calculProba+=p+fv ;
+	    				}
+	    				break ;
+	    			
+	    			case "Aucun":
+	    				vent=false;
+	    				break;
+    			}
+    			if (!vent) {
+    				calculProba=cpt*p+q ; 
+    			}
     			double number=Math.random();
     			if (number<calculProba) {
     				setNextState(a.getStates().get(2));
