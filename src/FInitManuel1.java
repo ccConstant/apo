@@ -1,10 +1,9 @@
-import javax.swing.*;
-import java.awt.*;
-import java.io.Serializable;
+import java.awt.BorderLayout;
 
-public class FGrille extends JFrame{/* implements Serializable{
-	
-	private static final long serialVersionUID = 2L;*/
+import javax.swing.JButton;
+import javax.swing.JFrame;
+
+public class FInitManuel1 extends JFrame implements FInit{
 
     private int rows;
     private int cols;
@@ -14,49 +13,60 @@ public class FGrille extends JFrame{/* implements Serializable{
     private Controller c;
     private DessinGrille dg;
     
-    private Simulation sim;
-
-    public FGrille(Controller c, int rows, int cols, Simulation sim) {
+    private Automate auto;
+    
+    
+	public FInitManuel1(Controller c, int cols, int rows) {
         this.c = c;
         this.rows = rows;
         this.cols = cols;
         this.gridWidth = 400; 
         this.gridHeight = 400; 
-        
-        this.sim = sim;
 
         setTitle("Grille paramétrée");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(440, 480);
         setLocationRelativeTo(c.getAccueil());
+        
+        
 
         elementFenetre();
 
         setVisible(true);
         
-
-    }
-
-    public void elementFenetre() {
+	}
+	public void elementFenetre() {
         this.getContentPane().setLayout(new BorderLayout());
         
-        dg = new DessinGrille(cols, rows, gridWidth, gridHeight, sim.getAutomate());
+        dg = new DessinGrille(rows, cols, gridWidth, gridHeight, auto);
         dg.setFocusable(true);
+        dg.addMouseListener(new ClickIniListener(c));
         add(dg, BorderLayout.CENTER);
 
-        JButton ps = new JButton("Reprendre");
-        ps.addActionListener(new PauseListener(c, ps));
-        add(ps, BorderLayout.SOUTH);
+        JButton opt = new JButton("Lancer la simulation");
+        opt.addActionListener(new LancerListener(c));
+        add(opt, BorderLayout.SOUTH);
     }
-    
+	
     public DessinGrille getDessin() {
     	return dg;
     }
-
+    
 	public Simulation getSimu() {
 		
-		return sim;
+		return null;
+	}
+	
+	public int getRows() {
+		return rows;
 	}
     
-    
+	public int getCols() {
+		return cols;
+	}
+	@Override
+	public void setVisible(boolean b) {
+		super.setVisible(b);
+		
+	}
 }

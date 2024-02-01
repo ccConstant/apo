@@ -7,7 +7,7 @@ public class Controller {
 
 	private FenetreAccueil fa;
 	private FGrille fg;
-	private FInitLife fi;
+	private FInit fi;
 	
 	private ReloadTimer rt;
 	
@@ -30,16 +30,27 @@ public class Controller {
 		return fa;
 	}
 	
-	public void generer() {
+	public void generer(String type) {
 		fa.setVisible(false);
 		int x = fa.getValX();
 		int y = fa.getValY();
 		int z = fa.getValZ();
 		
+		System.out.println(type);
+		switch(type) {
+		case "Jeu de la vie" : fi = new FInitLife(this, x, y);break;
+		case "Feu de forêt" : fi = new FInitLife(this, x, y);break;
+		case "Règle de majorité" : fi = new FInitLife(this, x, y);break;
+		case "1D" : fi = new F1D(this, x, 1);break;
+		case "Manuel" : fi = new FInitLife(this, x, y);break;
+		}
+		
+		
 		int tps = fa.getTps();
 		int ite = fa.getIte();
 		rt = new ReloadTimer(tps, ite, this);
-		fi = new FInitLife(this, x, y);
+		
+
 		
 	}
 

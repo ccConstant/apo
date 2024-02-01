@@ -104,7 +104,7 @@ public class FenetreAccueil extends JFrame{
 		gridBas.add(quitter);
 		
 		quitter.addActionListener(new QuitterListener(c));
-		generer.addActionListener(new GenererListener(c));
+		generer.addActionListener(new GenererListener(c, cbAuto));
 		
 		this.add(gridBas, BorderLayout.SOUTH);
 	}
