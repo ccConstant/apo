@@ -43,10 +43,23 @@ public class FGrille extends JFrame{/* implements Serializable{
         dg = new DessinGrille(cols, rows, gridWidth, gridHeight, sim.getAutomate());
         dg.setFocusable(true);
         add(dg, BorderLayout.CENTER);
-
+        
+		JPanel gridBas = new JPanel(); 
+		gridBas.setLayout(new GridLayout(1,2));
+		
+		//restart.addActionListener(new RejouerListener(this));
+		JButton quitter = new JButton("Quitter");
+		//save.addActionListener(new SaveListener(this));
         JButton ps = new JButton("Reprendre");
         ps.addActionListener(new PauseListener(c, ps));
         add(ps, BorderLayout.SOUTH);
+        
+		gridBas.add(ps);
+		gridBas.add(quitter);
+		
+		quitter.addActionListener(e -> dispose());
+		
+		this.add(gridBas, BorderLayout.SOUTH);
     }
     
     public DessinGrille getDessin() {

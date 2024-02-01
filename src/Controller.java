@@ -36,12 +36,11 @@ public class Controller {
 		int y = fa.getValY();
 		int z = fa.getValZ();
 		
-		System.out.println(type);
 		switch(type) {
 		case "Jeu de la vie" : fi = new FInitLife(this, x, y);break;
 		case "Feu de forêt" : fi = new FInitLife(this, x, y);break;
 		case "Règle de majorité" : fi = new FInitLife(this, x, y);break;
-		case "1D" : fi = new F1D(this, x, 1);break;
+		case "1D" : fi = new FInit1D(this, x, 1);break;
 		case "Manuel" : fi = new FInitLife(this, x, y);break;
 		}
 		
