@@ -14,6 +14,8 @@ public class DessinGrille extends JPanel { /* implements Serializable{
     private int gridHeight;
     
     private Automate a;
+    
+    private boolean hexa;
 
     private int cellSize;
     
@@ -25,37 +27,42 @@ public class DessinGrille extends JPanel { /* implements Serializable{
         this.gridWidth = gridWidth;
         this.gridHeight = gridHeight;
         this.a = a;
+        hexa = false;
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        
-        // Calculer la longueur et la largeur de la cellule selon les dimensions de la grille
-        int widthMax = gridWidth / rows;
-        int heightMax = gridHeight / cols;
-        if (widthMax > heightMax) {
-        	cellSize = heightMax;
-        }else {
-        	cellSize = widthMax;
-        }
-
-        // Dessiner les lignes de la grille dans l'aire spécifique 
-        for (int i = 0; i < cols; i++) {
-            for (int j = 0; j < rows; j++) {
-            	int x = startX + j * cellSize;
-                int y = startY + i * cellSize;
-                
-            	Cellule c = a.getCelluleFromPosition(j, i);
-                State s = c.getCurrentState();
-                Color col = new Color(s.getR(), s.getG(), s.getB());
-                g.setColor(col);
-                g.fillRect(x, y, cellSize, cellSize);
-                
-                g.setColor(Color.BLACK);
-                g.drawRect(x, y, cellSize, cellSize);
+        if (!hexa) {
+        	// Calculer la longueur et la largeur de la cellule selon les dimensions de la grille
+            int widthMax = gridWidth / rows;
+            int heightMax = gridHeight / cols;
+            if (widthMax > heightMax) {
+            	cellSize = heightMax;
+            }else {
+            	cellSize = widthMax;
             }
+
+            // Dessiner les lignes de la grille dans l'aire spécifique 
+            for (int i = 0; i < cols; i++) {
+                for (int j = 0; j < rows; j++) {
+                	int x = startX + j * cellSize;
+                    int y = startY + i * cellSize;
+                    
+                	Cellule c = a.getCelluleFromPosition(j, i);
+                    State s = c.getCurrentState();
+                    Color col = new Color(s.getR(), s.getG(), s.getB());
+                    g.setColor(col);
+                    g.fillRect(x, y, cellSize, cellSize);
+                    
+                    g.setColor(Color.BLACK);
+                    g.drawRect(x, y, cellSize, cellSize);
+                }
+            }
+        } else {
+        	
         }
+        
     }
     
     public Automate getAuto() {
@@ -72,5 +79,9 @@ public class DessinGrille extends JPanel { /* implements Serializable{
     
     public int getcols() {
     	return cols;
+    }
+    
+    public void setHexa(boolean b) {
+    	hexa = b;
     }
 }
