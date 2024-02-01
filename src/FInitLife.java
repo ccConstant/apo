@@ -3,7 +3,7 @@ import java.awt.BorderLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
-public class FInitLife extends JFrame{
+public class FInitLife extends JFrame implements FInit{
 
     private int rows;
     private int cols;
@@ -13,7 +13,7 @@ public class FInitLife extends JFrame{
     private Controller c;
     private DessinGrille dg;
     
-    private SimulationLifeGame sim;
+    private Simulation sim;
     
 	public FInitLife(Controller c, int cols, int rows) {
         this.c = c;
@@ -28,7 +28,7 @@ public class FInitLife extends JFrame{
         setLocationRelativeTo(c.getAccueil());
         
         sim = new SimulationLifeGame();
-        sim.init_simulation(rows, cols);
+        ((SimulationLifeGame)sim).init_simulation(rows, cols);
 
         elementFenetre();
 
@@ -52,7 +52,7 @@ public class FInitLife extends JFrame{
     	return dg;
     }
     
-	public SimulationLifeGame getSimu() {
+	public Simulation getSimu() {
 		
 		return sim;
 	}
@@ -63,5 +63,10 @@ public class FInitLife extends JFrame{
     
 	public int getCols() {
 		return cols;
+	}
+	@Override
+	public void setVisible(boolean b) {
+		super.setVisible(b);
+		
 	}
 }

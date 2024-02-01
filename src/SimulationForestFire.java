@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class SimulationForestFire {//implements Simulation {
+public class SimulationForestFire implements Simulation {
 	
 	Automate automate ; 
 	boolean proba ; 

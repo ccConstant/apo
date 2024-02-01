@@ -5,29 +5,61 @@ import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
-public class F1D extends JFrame implements ItemListener {
+public class F1D extends JFrame implements FInit{
     static int HAUTEUR = 600;
     final static int LARGEUR = 900;
 
     static JLabel l1;
     static JTextField ruleField;
     static JTable table;
+	private Controller c;
+	private int rows;
+	private int cols;
+	private Simulation sim;
+	private DessinGrille dg;
+	private int gridWidth;
+	private int gridHeight;
 
-    public F1D() {
+    public F1D(Controller c, int cols, int rows) {
+    	
+    	this.c = c;
+        this.rows = rows;
+        this.cols = cols;
+
+        this.gridWidth = 400; 
+        this.gridHeight = 400; 
+        
         setTitle("Paramètres: Automate feu de forêt");
         setSize(LARGEUR, HAUTEUR);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         getContentPane().setLayout(new BorderLayout());
 
+        sim = new SimulationLifeGame();
+        //sim = new Simulation1D();
+        ((SimulationLifeGame)sim).init_simulation(rows, cols);
+        
         l1 = new JLabel("Saisir règle: ");
         ruleField = new JTextField(10);
+        ruleField.setText("0");
+        
+        ruleField.addActionListener(e -> {
+            generateTableData();
+        });
 
         JPanel mainPanel = new JPanel(new BorderLayout());
-        mainPanel.add(createOptionsPanel(), BorderLayout.CENTER);
+        mainPanel.add(createOptionsPanel(), BorderLayout.NORTH);
         mainPanel.add(createButtonPanel(), BorderLayout.SOUTH);
+        
+        dg = new DessinGrille(rows, cols, gridWidth, gridHeight, sim.getAutomate());
+        dg.setFocusable(true);
+        dg.addMouseListener(new ClickIniListener(c));
+        mainPanel.add(dg, BorderLayout.CENTER);
+        
         getContentPane().add(mainPanel);
 
         setLocationRelativeTo(null);
+        generateTableData();
+        setVisible(true);
     }
 
     private JPanel createButtonPanel() {
@@ -50,7 +82,7 @@ public class F1D extends JFrame implements ItemListener {
 
     private JPanel createOptionsPanel() {
         JPanel optionsPanel = new JPanel(new GridBagLayout());
-        optionsPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        optionsPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 0));
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
@@ -105,18 +137,22 @@ public class F1D extends JFrame implements ItemListener {
         // Update the table model
         table.setModel(model);
     }
-
-
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            F1D f1d = new F1D();
-            f1d.setVisible(true);
-        });
+	
+    public DessinGrille getDessin() {
+    	return dg;
     }
+    
+	public Simulation getSimu() {
+		
+		return sim;
+	}
+	
+	public int getRows() {
+		return rows;
+	}
+    
+	public int getCols() {
+		return cols;
+	}
 
-    @Override
-    public void itemStateChanged(ItemEvent e) {
-        // Your itemStateChanged logic here
-    }
 }

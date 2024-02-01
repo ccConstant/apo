@@ -14,9 +14,9 @@ public class FGrille extends JFrame{/* implements Serializable{
     private Controller c;
     private DessinGrille dg;
     
-    private SimulationLifeGame sim;
+    private Simulation sim;
 
-    public FGrille(Controller c, int rows, int cols, SimulationLifeGame sim) {
+    public FGrille(Controller c, int rows, int cols, Simulation sim) {
         this.c = c;
         this.rows = rows;
         this.cols = cols;
@@ -53,7 +53,7 @@ public class FGrille extends JFrame{/* implements Serializable{
     	return dg;
     }
 
-	public SimulationLifeGame getSimu() {
+	public Simulation getSimu() {
 		
 		return sim;
 	}
