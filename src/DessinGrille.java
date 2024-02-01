@@ -49,7 +49,7 @@ public class DessinGrille extends JPanel { /* implements Serializable{
                 	int x = startX + j * cellSize;
                     int y = startY + i * cellSize;
                     
-                	Cellule c = a.getCelluleFromPosition(j, i);
+                	Cellule c = a.getCelluleFromPosition(j, i, hexa);
                     State s = c.getCurrentState();
                     Color col = new Color(s.getR(), s.getG(), s.getB());
                     g.setColor(col);
@@ -60,7 +60,47 @@ public class DessinGrille extends JPanel { /* implements Serializable{
                 }
             }
         } else {
-        	
+        	int widthMax = gridWidth / (rows);
+            int heightMax = ((gridHeight / (cols))*2)/3;
+            if (widthMax > heightMax) {
+            	cellSize = heightMax;
+            }else {
+            	cellSize = widthMax;
+            }
+        		    for (int i = 0; i < rows; i++) {
+        		        for (int j = 0; j < cols; j++) {
+        		        	int starty = (int)Math.round(i * cellSize * (1.0/2));
+        		        	int startx = (int)Math.round(j * cellSize * (3.0/2));
+        		        	if (i%2 == 1) {
+        		        		startx = (int)Math.round(j *  cellSize * (3.0/2) +  cellSize * (3.0/4));
+        		        	}
+        		            int[] xPoints = {
+        		            	(int)Math.round(startX  + startx  +  cellSize * (1.0/4)),
+        		            	(int)Math.round(startX  + startx  +  cellSize * (3.0/4)),
+        		            	startX  + startx +  cellSize,
+        		            	(int)Math.round(startX  + startx +  cellSize * (3.0/4)),
+        		            	(int)Math.round(startX  + startx  +  cellSize * (1.0/4)),
+        		                startX  + startx 
+        		            };
+        		            int[] yPoints = {
+        		                startY + starty +  cellSize,
+        		                startY + starty +  cellSize,
+        		                (int)Math.round(startY + starty +  cellSize * (1.0/2)),
+        		                startY + starty,
+        		                startY + starty,
+        		                (int)Math.round(startY + starty +  cellSize * (1.0/2))
+        		            };
+        		            
+        		            Cellule c = a.getCelluleFromPosition(i, j, true);
+                            State s = c.getCurrentState();
+                            Color col = new Color(s.getR(), s.getG(), s.getB());
+                            g.setColor(col);
+                            g.fillPolygon(xPoints, yPoints, 6);
+                            
+                            g.setColor(Color.BLACK);
+        		            g.drawPolygon(xPoints, yPoints, 6);
+        		        }
+        		    }
         }
         
     }
@@ -83,5 +123,7 @@ public class DessinGrille extends JPanel { /* implements Serializable{
     
     public void setHexa(boolean b) {
     	hexa = b;
+    	this.repaint();
     }
+    
 }

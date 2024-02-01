@@ -10,9 +10,11 @@ public class Controller {
 	private FInit fi;
 	
 	private ReloadTimer rt;
+	private boolean hexa;
 	
 	public Controller() {
 		fa = new FenetreAccueil(this);
+		hexa = false;
 		
 	}
 
@@ -41,7 +43,7 @@ public class Controller {
 		case "Feu de forêt" : fi = new FInitLife(this, x, y);break;
 		case "Règle de majorité" : fi = new FInitLife(this, x, y);break;
 		case "1D" : fi = new FInit1D(this, x, 1);break;
-		case "Manuel" : fi = new FInitLife(this, x, y);break;
+		case "Manuel" : fi = new FInitManuel1(this, x, y);break;
 		}
 		
 		
@@ -74,16 +76,20 @@ public class Controller {
 	}
 	
 	public void changeStateClick(int xClick, int yClick) {
+		Automate auto;
+		if(!(fi instanceof FInitManuel1)) {
+			auto = fi.getSimu().getAutomate();
+		} else {
+			auto = ((FInitManuel1)fi).getAuto();
+		}
+		
 		int size = fi.getDessin().getCellSize();
 		int x = (xClick-10)/size;
 		int y = (yClick-10)/size;
-		System.out.println(x);
-		System.out.println(y);
 		if (x < fi.getCols() && y < fi.getRows()) {
-			ArrayList<State> states = fi.getSimu().getAutomate().getStates();
-			Cellule target = fi.getSimu().getAutomate().getCelluleFromPosition(x, y);
+			ArrayList<State> states = auto.getStates();
+			Cellule target = auto.getCelluleFromPosition(x, y, hexa);
 			State next = states.get((states.indexOf(target.getCurrentState())+1)%states.size());
-			System.out.println(target);
 			target.setCurrentState(next);
 			fi.getDessin().repaint();
 		}
@@ -98,6 +104,17 @@ public class Controller {
 		rt.startReload();
 		
 	}
+	
+	public void setHexa(boolean b) {
+		hexa = b;
+	}
+
+	public void nextManuel() {
+		
+		
+	}
+	
+	
 	
 
 }
