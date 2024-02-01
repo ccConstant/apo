@@ -45,12 +45,20 @@ public class SimulationForestFire implements Simulation {
 		nbrIteration=0 ; 
 		this.automate=new Automate(2, states, voisins, rows, col); 
 		
-		if (nbrVoisins==4) {
-			automate.position5Voisins2D();
+		if (nbrVoisins==6) {
+			//automate.position7Voisins2D();
+			//automate.initCellulesHexa(foret);
 		}else {
-			automate.position9Voisins2D();
+			//automate.initCellules(foret);
+			if (nbrVoisins==4) {
+				automate.position5Voisins2D();
+			}else {
+				automate.position9Voisins2D();
+			}
 		}
-		automate.initCellules(foret);
+		
+		automate.initCellulesHexa(foret);
+		//automate.initCellules(foret);
 		this.caseForetDepart=automate.nbrCellulesInState(foret);
 		if (nbrFeu>caseForetDepart) {
 			throw new Error("Le nombre de feu est supérieur au nombre de case Forêt") ; 
