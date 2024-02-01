@@ -115,12 +115,77 @@ public class Automate {
      * @param y ordonnée de la cellule à récupérer
      * @return Cellule une cellule de l'automate
      */
-    public Cellule getCelluleFromPosition(int x, int y) {
-    	if (y%2==0) {
+    public Cellule getCelluleFromPosition(int x, int y, boolean hexa) {
+    	if (hexa) {
+    		if (x >=0 && y >=0 && x<largeur*2 && y<longueur ) {
+    			int i= x/2 ; 
+        		return cellules.get(y*largeur+i);
+        	}else {
+        		return null ; 
+        	}
+    	}
+    	if (x >=0 && y >=0 && x<largeur && y<longueur ) {
     		return cellules.get(y*largeur+x);
     	}else {
-    		return cellules.get(y*largeur+x);
+    		return null ; 
     	}
+    	
+    }
+    
+    /**
+     * Getter de la cellule située au nord de la cellule traitée
+     * @param x abscisse de la cellule dont on cherche la voisine du nord
+     * @param y ordonnée de la cellule dont on cherche la voisine du nord 
+     * @return Cellule une cellule de l'automate
+     */
+    public Cellule getCelluleNord(int x, int y, boolean hexa) {
+    	if (hexa) {
+    		return getCelluleFromPosition(x, y-2, hexa);
+    	}
+    	return getCelluleFromPosition(x, y-1, hexa);
+    	
+    }
+    
+    /**
+     * Getter de la cellule située au sud de la cellule traitée
+     * @param x abscisse de la cellule dont on cherche la voisine du sud
+     * @param y ordonnée de la cellule dont on cherche la voisine du sud 
+     * @return Cellule une cellule de l'automate
+     */
+    public Cellule getCelluleSud(int x, int y, boolean hexa) {
+    	if (hexa) {
+    		return getCelluleFromPosition(x, y+2, hexa);
+    	}
+    	return getCelluleFromPosition(x, y+1, hexa);
+    	
+    }
+    
+    /**
+     * Getter de la cellule située à l'est de la cellule traitée
+     * @param x abscisse de la cellule dont on cherche la voisine de l'est
+     * @param y ordonnée de la cellule dont on cherche la voisine de l'est 
+     * @return Cellule une cellule de l'automate
+     */
+    public Cellule getCelluleEst(int x, int y, boolean hexa) {
+    	if (hexa) {
+    		return getCelluleFromPosition(x+2, y, hexa);
+    	}
+    	return getCelluleFromPosition(x+1, y, hexa);
+    	
+    }
+    
+    /**
+     * Getter de la cellule située à l'ouest de la cellule traitée
+     * @param x abscisse de la cellule dont on cherche la voisine de l'ouest
+     * @param y ordonnée de la cellule dont on cherche la voisine de l'ouest
+     * @return Cellule une cellule de l'automate
+     */
+    public Cellule getCelluleOuest(int x, int y, boolean hexa) {
+    	if (hexa) {
+    		return getCelluleFromPosition(x-2, y, hexa);
+    	}
+    	return getCelluleFromPosition(x-1, y, hexa);
+    	
     }
     
     /**
@@ -128,16 +193,16 @@ public class Automate {
      * @param c cellule dont veut récupérer les voisins
      * @return ArrayList<Cellule> une liste de Cellule contenant les voisins de la cellule passée en paramètre
      */
-    public ArrayList<Cellule> getVoisins2D(Cellule c) {
+    public ArrayList<Cellule> getVoisins2D(Cellule c, boolean hexa) {
     	int[] position=c.getPosition();
     	ArrayList<Cellule> cellulesVoisines=new ArrayList<Cellule>() ; 
     	for (int i=0 ; i<nombreVoisins ; i++) {
     		int abscisse=position[0]+voisins[i][0]; 
     		int ordonnee= position[1]+voisins[i][1] ; 
-    		if (abscisse >=0 && ordonnee >=0 && abscisse<largeur && ordonnee<longueur ) {
-    			Cellule a=getCelluleFromPosition(position[0]+voisins[i][0], position[1]+voisins[i][1]); 
-    			cellulesVoisines.add(a);
-    		}
+			Cellule a=getCelluleFromPosition(abscisse, ordonnee, hexa); 
+			if (a!=null) {
+				cellulesVoisines.add(a);
+			}
     	}
     	return cellulesVoisines;
     }
@@ -148,8 +213,8 @@ public class Automate {
      * @param c cellule dont veut analyser les voisins
      * @return int le nombre de cellules voisines de la cellule c se trouvant dans l'état s 
      */
-    public int nbrVoisinsInState(State s, Cellule c) {
-    	ArrayList<Cellule> voisins=this.getVoisins2D(c);
+    public int nbrVoisinsInState(State s, Cellule c, boolean hexa) {
+    	ArrayList<Cellule> voisins=this.getVoisins2D(c, hexa);
 		int cpt=0 ; 
 		for (Cellule voisin : voisins) {
 			if (voisin.getCurrentState().getState()==s.getState()) {
@@ -202,7 +267,6 @@ public class Automate {
 		voisins[8][1]=1; 	
     }
     
-
     /**
      * Calcule la position des 5 voisins
      */
@@ -219,6 +283,39 @@ public class Automate {
 		voisins[4][0]=0;  
 		voisins[4][1]=1;  	
     }
+    
+    /**
+     * Calcule la position des 5 voisins
+     */
+    public void position7Voisins2D() {
+    	nombreVoisins=5 ; 
+    	//0;0
+    	voisins[0][0]=0 ; 
+		voisins[0][1]=0; 
+		
+		//voisin du haut
+		voisins[1][0]=0 ; 
+		voisins[1][1]=-2 ; 
+		
+		//voisin du bas 
+		voisins[2][0]=0; 
+		voisins[2][1]=2; 
+		
+		//voisin à droite 
+		voisins[3][0]=1;  
+		voisins[3][1]=1;
+		
+		voisins[4][0]=1;  
+		voisins[4][1]=-1;  
+		
+		//voisin à gauche 
+		voisins[3][0]=-1;  
+		voisins[3][1]=1;
+		
+		voisins[4][0]=-1;  
+		voisins[4][1]=-1; 
+    }
+    
 
     /** 
      * Initialise l'état de toutes cellules en mode hexagone de l'automate à l'état passé en paramètre

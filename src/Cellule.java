@@ -67,7 +67,7 @@ public class Cellule{
      * Rechargement de la cellule dans le cas du feu de forêt
      * @param a automate auquel appartient la cellule
      */
-    public void rechargementForet(Automate a, boolean proba, double p, double q, String orVent, double fv) {
+    public void rechargementForet(Automate a, boolean proba, double p, double q, String orVent, double fv, boolean hexa) {
     	setNextState(a.getStates().get(0));
     	
     	//Si l'état actuel est 0, on reste dans l'état 0 
@@ -78,7 +78,7 @@ public class Cellule{
     	
     	// Si l'état actuel est forêt, on va regarder si on a des voisins en feu
     	if (this.currentState.getState()==a.getStates().get(1).getState()) {
-    		int cpt=a.nbrVoisinsInState(a.getStates().get(2), this);
+    		int cpt=a.nbrVoisinsInState(a.getStates().get(2), this, hexa);
     		
     		//si nous ne sommes pas dans le cas probabiliste 
     		if (!proba) {
@@ -92,49 +92,43 @@ public class Cellule{
 	    	//cas probabiliste
     		}else {
     			double calculProba=0 ; 
-    			//Ma cellule représente 0;0
-    			//Celle au nord représente 0;-1
-    			int x=this.position[0] ; 
-    			int y=this.position[1]-1 ; 
+    			int x=this.position[0];
+    			int y=this.position[1];
+    			
+    			//nord
     			boolean nordIsFire; 
-    			if (x >=0 && y >=0 && x<a.getLargeur() && y<a.getLongueur() ) {
-    				Cellule nord=a.getCelluleFromPosition(x, y);
+    			Cellule nord=a.getCelluleNord(x,y,hexa); 
+    			if (nord!=null) {
     				nordIsFire=nord.getCurrentState().equals(a.getStates().get(2));
     			}else {
-    				nordIsFire=false ; 
+    				nordIsFire=false;
     			}
-    			//Celle au sud représente 0;+1
-    			x=this.position[0] ; 
-    			y=this.position[1]+1 ;
-    			boolean sudIsFire;
-    			if (x >=0 && y >=0 && x<a.getLargeur() && y<a.getLongueur() ) {
-    				Cellule sud=a.getCelluleFromPosition(x, y);
+    			
+    			//sud
+    			boolean sudIsFire; 
+    			Cellule sud=a.getCelluleSud(x,y,hexa); 
+    			if (sud!=null) {
     				sudIsFire=sud.getCurrentState().equals(a.getStates().get(2));
     			}else {
-    				sudIsFire=false ; 
+    				sudIsFire=false;
     			}
     			
-    			//Celle à l'est représente 1;0
-    			x=this.position[0]+1 ; 
-    			y=this.position[1] ;
-    			boolean estIsFire;
-    			if (x >=0 && y >=0 && x<a.getLargeur() && y<a.getLongueur() ) {
-    				Cellule est=a.getCelluleFromPosition(x, y);
+    			//est
+    			boolean estIsFire; 
+    			Cellule est=a.getCelluleEst(x,y,hexa); 
+    			if (est!=null) {
     				estIsFire=est.getCurrentState().equals(a.getStates().get(2));
     			}else {
-    				estIsFire=false ; 
+    				estIsFire=false;
     			}
-    		
-    			//Celle à l'ouest représente -1;0
     			
-    			x=this.position[0]-1 ; 
-    			y=this.position[1] ;
-    			boolean ouestIsFire;
-    			if (x >=0 && y >=0 && x<a.getLargeur() && y<a.getLongueur() ) {
-    				Cellule ouest=a.getCelluleFromPosition(x, y);
+    			//ouest
+    			boolean ouestIsFire; 
+    			Cellule ouest=a.getCelluleOuest(x,y,hexa); 
+    			if (ouest!=null) {
     				ouestIsFire=ouest.getCurrentState().equals(a.getStates().get(2));
     			}else {
-    				ouestIsFire=false ; 
+    				ouestIsFire=false;
     			}
     			boolean vent=true;
     			switch(orVent) {
@@ -232,7 +226,7 @@ public class Cellule{
     public void rechargementLife(Automate a) {
     	setNextState(a.getStates().get(0));
     	
-    	int in1=a.nbrVoisinsInState(a.getStates().get(1), this);
+    	int in1=a.nbrVoisinsInState(a.getStates().get(1), this, false);
     	
     	switch(in1) {
     		//Si nbrVoisins à 1 est <2 on va dans l'état 0 

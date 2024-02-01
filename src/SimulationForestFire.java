@@ -11,6 +11,7 @@ public class SimulationForestFire implements Simulation {
 	int nbrIteration ; 
 	String orVent ; 
 	double fv ; 
+	boolean hexa=false;
 	
 	/** 
      * Initialisation de la simulation du feu de forêt 
@@ -46,19 +47,17 @@ public class SimulationForestFire implements Simulation {
 		this.automate=new Automate(2, states, voisins, rows, col); 
 		
 		if (nbrVoisins==6) {
-			//automate.position7Voisins2D();
-			//automate.initCellulesHexa(foret);
+			hexa=true;
+			automate.position7Voisins2D();
+			automate.initCellulesHexa(foret);
 		}else {
-			//automate.initCellules(foret);
+			automate.initCellules(foret);
 			if (nbrVoisins==4) {
 				automate.position5Voisins2D();
 			}else {
 				automate.position9Voisins2D();
 			}
 		}
-		
-		automate.initCellulesHexa(foret);
-		automate.initCellules(foret);
 		this.caseForetDepart=automate.nbrCellulesInState(foret);
 		if (nbrFeu>caseForetDepart) {
 			throw new Error("Le nombre de feu est supérieur au nombre de case Forêt") ; 
@@ -83,7 +82,7 @@ public class SimulationForestFire implements Simulation {
      */
 	public void rechargement() {
 		for(Cellule a : automate.getCellules()) {
-			a.rechargementForet(automate, proba, p,q, orVent, fv);
+			a.rechargementForet(automate, proba, p,q, orVent, fv, hexa);
 		}
 		for(Cellule a : automate.getCellules()) {
 			a.setCurrentState(a.getNextState());
