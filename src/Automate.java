@@ -424,4 +424,99 @@ public class Automate {
 			}
 		}
 	}
+
+
+
+
+    /**
+     * Méthode pour obtenir les trois voisins d'une cellule en 1D
+     * @param c cellule pour laquelle on veut obtenir les voisins
+     * @return ArrayList<Cellule> liste de trois voisins (gauche, droite et cellule elle-même)
+     */
+    public ArrayList<Cellule> getThreeNeighbours(Cellule c) {
+      int[] position = c.getPosition();
+      ArrayList<Cellule> neighbours = new ArrayList<>();
+
+      // Voisin de gauche
+      int leftX = (position[0] - 1 + largeur) % largeur;
+      neighbours.add(getCelluleFromPosition(leftX, position[1], false));
+
+      // Voisin de droite
+      int rightX = (position[0] + 1) % largeur;
+      neighbours.add(getCelluleFromPosition(rightX, position[1], false));
+
+      // La cellule elle-même
+      neighbours.add(c);
+
+      return neighbours;
+    }
+
+
+      // méthode pour mettre à jour les cellules selon la règle spécifiée
+    public void updateCells(int rule) {
+      for (Cellule cell : cellules) {
+          cell.updateCell(this, rule);
+      }
+    }
+
+    public void updateCellMajority(Cellule cell) {
+      ArrayList<Cellule> neighbours = getNeighbours(cell);
+      int[] countStates = new int[states.size()];
+
+      // Compter le nombre d'occurrences de chaque état parmi les voisins
+      for (Cellule neighbour : neighbours) {
+          countStates[getStateIndex(neighbour.getCurrentState())]++;
+      }
+
+      // Trouver l'état majoritaire
+      int majorityState = findMajorityState(countStates);
+
+      // Mettre à jour l'état de la cellule
+      cell.setNextState(states.get(majorityState));
+
+    }
+
+      // Méthode pour trouver l'index de l'état majoritaire
+      private int findMajorityState(int[] countStates) {
+        int majorityState = 0;
+        int maxCount = 0;
+
+        for (int i = 0; i < countStates.length; i++) {
+            if (countStates[i] > maxCount) {
+                maxCount = countStates[i];
+                majorityState = i;
+            }
+        }
+
+        return majorityState;
+      }
+
+      public ArrayList<Cellule> getNeighbours(Cellule cell) {
+        int[] position = cell.getPosition();
+        ArrayList<Cellule> neighbours = new ArrayList<>();
+
+        // Voisin de gauche
+        int leftX = (position[0] - 1 + largeur) % largeur;
+        neighbours.add(getCelluleFromPosition(leftX, position[1], false));
+
+        // Voisin de droite
+        int rightX = (position[0] + 1) % largeur;
+        neighbours.add(getCelluleFromPosition(rightX, position[1], false));
+
+        // La cellule elle-même
+        neighbours.add(cell);
+
+        return neighbours;
+      }
+
+      public int getStateIndex(State state) {
+        return states.indexOf(state);
+      }
+
+      public void updateCellsMajority() {
+        for (Cellule cell : cellules) {
+            cell.updateCellMajority(this);
+        }
+      }
+
 }

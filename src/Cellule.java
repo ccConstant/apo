@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Map;
 
 public class Cellule{
@@ -310,4 +311,31 @@ public class Cellule{
     			
     	}
     }
+
+	public void updateCell(Automate automate, int rule) {
+		int[] voisinsStates = new int[3];
+		ArrayList<Cellule> neighbours = automate.getThreeNeighbours(this);
+	
+		for (int i = 0; i < 3; i++) {
+			voisinsStates[i] = Integer.parseInt(neighbours.get(i).getCurrentState().getState());
+		}
+	
+		// Calcul de la valeur binaire
+		int binaryValue = voisinsStates[0] * 4 + voisinsStates[1] * 2 + voisinsStates[2];
+	
+		// Utilisation du bit correspondant de la règle (en prenant en compte l'ordre 111, 110, 101, 100, 011, 010, 001, 000)
+		int bit = (rule & (1 << (7 - binaryValue))) >> (7 - binaryValue);
+	
+		// Utilisation de l'opérateur modulo pour assurer que la valeur reste dans les limites
+		int newValue = (voisinsStates[1] + bit + automate.getStates().size()) % automate.getStates().size();
+	
+		setNextState(automate.getStates().get(newValue));
+	}
+
+
+
+
+	public void updateCellMajority(Automate automate) {
+		automate.updateCellMajority(this);
+	}
 }
