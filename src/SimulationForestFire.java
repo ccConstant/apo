@@ -26,7 +26,7 @@ public class SimulationForestFire implements Simulation {
      * @param fv : force du vent 
      * 
      */
-	public void init_simulation(int nbrFeu, int rows, int col, int nbrVoisins, boolean proba, double p, double q, String orVent, double fv) { //mettre le vent
+	public void init_simulation(int nbrFeu, int rows, int col, int nbrVoisins, boolean proba, double p, double q, String orVent, double fv) { 
 		State vide=new State("vide", 80, 80, 80, false);
 		State feu=new State("en feu", 80, 8, 8, false);
 		State brule=new State("brûlé", 0,0,0, false);

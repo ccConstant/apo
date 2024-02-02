@@ -63,4 +63,12 @@ public class State{
     public int getB() {
     	return b;
     }
+    
+    /**
+     * Getter de la valeur de byDefault
+     * @return boolean : est-ce que c'est l'état par défaut?
+     */
+    public boolean getByDefault() {
+    	return byDefault;
+    }
 }

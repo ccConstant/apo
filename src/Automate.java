@@ -7,11 +7,25 @@ public class Automate {
     ArrayList<State> states= new ArrayList<State>() ;
     int voisins[][]; // doit être de taille [nombreVoisins][d]
     ArrayList<Cellule> cellules = new ArrayList<Cellule>() ;
-    int longueur ;
-    int largeur;
+    int longueur=0;
+    int largeur=0;
     int nombreVoisins=0;
+    int z=0; 
     
-
+    /** 
+     * Constructeur
+     * @param d dimension de l'automate
+     * @param states états dans lesquels les cellules de l'automate peuvent être
+     * @param voisins position des différentes voisins d'une cellule
+     * @param largeur de la grille
+     */
+    public Automate(int d, ArrayList<State> states, int voisins[][], int largeur) {
+        this.d = 0; 
+        this.states = states;
+        this.voisins = voisins; 
+        this.largeur=largeur;
+    }
+    
     /** 
      * Constructeur
      * @param d dimension de l'automate
@@ -27,6 +41,27 @@ public class Automate {
         this.longueur=longueur;
         this.largeur=largeur;
     }
+    
+    /** 
+     * Constructeur
+     * @param d dimension de l'automate
+     * @param states états dans lesquels les cellules de l'automate peuvent être
+     * @param voisins position des différentes voisins d'une cellule
+     * @param longueur de la grille
+     * @param largeur de la grille
+     * @param z de la grille
+     */
+    public Automate(int d, ArrayList<State> states, int voisins[][], int longueur, int largeur, int z) {
+        this.d = 0; 
+        this.states = states;
+        this.voisins = voisins; 
+        this.longueur=longueur;
+        this.largeur=largeur;
+        this.z=z;
+    }
+    
+    
+    
 
     /** 
      * Affiche un automate : pour cela on affiche toutes les cellules de l'automate en question 
