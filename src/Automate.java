@@ -60,10 +60,23 @@ public class Automate {
         this.z=z;
     }
     
+    /**
+     * Setter du nombre de voisin considéré
+     * @param nombre de voisins à considérer
+     */
+    public void setNombreVoisins(int nombreVoisins) {
+    	this.nombreVoisins=nombreVoisins;
+    }
     
+    /**
+     * Getter du nombre de voisin
+     * @return int nombre de voisins d'une cellule
+     */
+    public int getNombreVoisins() {
+    	return nombreVoisins;
+    }
     
-
-    /** 
+	/** 
      * Affiche un automate : pour cela on affiche toutes les cellules de l'automate en question 
      */
     public void print() { 
@@ -93,6 +106,8 @@ public class Automate {
 			}
 		}
     }
+    
+    
     
     /** 
      * Initialise aléatoirement l'état de toutes cellules de l'automate à un des états appartenant à la liste d'états passée en paramètre
@@ -142,6 +157,14 @@ public class Automate {
      */
     public int getLargeur(){
     	return largeur;
+    }
+    
+    /**
+     * Getter de la dimension de l'automate
+     * @return int dimension de l'automate
+     */
+    public int getDimension(){
+    	return d;
     }
 
     /**
@@ -213,6 +236,7 @@ public class Automate {
      * Getter de la cellule située à l'ouest de la cellule traitée
      * @param x abscisse de la cellule dont on cherche la voisine de l'ouest
      * @param y ordonnée de la cellule dont on cherche la voisine de l'ouest
+     * @param hexa est-ce qu'il s'agit d'une grille hexagonale?
      * @return Cellule une cellule de l'automate
      */
     public Cellule getCelluleOuest(int x, int y, boolean hexa) {
@@ -226,6 +250,7 @@ public class Automate {
     /**
      * Getter des différentes voisins d'une cellule
      * @param c cellule dont veut récupérer les voisins
+     * @param hexa est-ce qu'il s'agit d'une grille hexagonale?
      * @return ArrayList<Cellule> une liste de Cellule contenant les voisins de la cellule passée en paramètre
      */
     public ArrayList<Cellule> getVoisins2D(Cellule c, boolean hexa) {
@@ -242,10 +267,32 @@ public class Automate {
     	return cellulesVoisines;
     }
     
+    
+    /**
+     * Getter des différentes voisins d'une cellule 
+     * @param c cellule dont veut récupérer les voisins
+     * @return ArrayList<Cellule> une liste de Cellule contenant les voisins de la cellule passée en paramètre
+     */
+    public ArrayList<Cellule> getVoisins3D(Cellule c) {
+    	int[] position=c.getPosition();
+    	ArrayList<Cellule> cellulesVoisines=new ArrayList<Cellule>() ; 
+    	for (int i=0 ; i<nombreVoisins ; i++) {
+    		int abscisse=position[0]+voisins[i][0]; 
+    		int ordonnee= position[1]+voisins[i][1] ;
+    		int z= position[2]+voisins[i][2]; 
+			//Cellule a=getCelluleFromPosition(abscisse, ordonnee, z, false);  //TODO
+			//if (a!=null) {
+				//cellulesVoisines.add(a);
+			//}
+    	}
+    	return cellulesVoisines;
+    }
+    
     /**
      * Calcule le nombre cellules voisines qui se trouvent dans l'état passé en paramètre 
      * @param s état dans lequel se trouve les cellules comptabilisées
      * @param c cellule dont veut analyser les voisins
+     * @param hexa est-ce qu'il s'agit d'une grille hexagonale?
      * @return int le nombre de cellules voisines de la cellule c se trouvant dans l'état s 
      */
     public int nbrVoisinsInState(State s, Cellule c, boolean hexa) {

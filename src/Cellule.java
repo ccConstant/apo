@@ -1,3 +1,5 @@
+import java.util.Map;
+
 public class Cellule{
     State currentState ;
     State nextState ; 
@@ -60,6 +62,48 @@ public class Cellule{
      */
     public State getNextState() {
     	return nextState ;
+    }
+    
+    
+    /** 
+     * Rechargement de la cellule dans le cas de la simulation manuelle
+     * @param a automate auquel appartient la cellule
+     * 
+     */
+    public void rechargementSimulManuelle(Automate a, Map<String, State> transitions) {
+    	if (a.getDimension()==1) {
+    		String states="";
+			for (Cellule voisin : a.getVoisins2D(this, false)) { //TODO remplacer par la méthode de kawthar 
+				states+=voisin.getCurrentState().getState();
+			}
+			if (transitions.containsKey(states)) {
+				this.setNextState(transitions.get(states));
+			}
+			return ;
+    	}
+		if(a.getDimension()==2) {
+			String states="";
+			for (Cellule voisin : a.getVoisins2D(this, false)) {
+				states+=voisin.getCurrentState().getState();
+			}
+			if (transitions.containsKey(states)) {
+				this.setNextState(transitions.get(states));
+			}
+			return ;
+		}if(a.getDimension()==3) {
+			String states="";
+			for (Cellule voisin : a.getVoisins3D(this)) {
+				states+=voisin.getCurrentState().getState();
+			}
+			if (transitions.containsKey(states)) {
+				this.setNextState(transitions.get(states));
+			}
+			return ;
+			
+		}
+    	
+    	
+    	
     }
     
     
