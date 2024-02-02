@@ -3,18 +3,34 @@ import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
-public class FInitForestFire extends JFrame {
-    static int HAUTEUR = 600;
+public class FInitForestFire extends JFrame implements FInit {
+    static int HAUTEUR = 750;
     final static int LARGEUR = 500;
-
+    
+    private int rows;
+    private int cols;
+    private int gridWidth;
+    private int gridHeight;
+    private Controller c;
     static JComboBox<Integer> combobox1;
     static JComboBox<String> combobox2;
     static JCheckBox checkBox1, checkBox2;
-    static JTextField percentageField, forestNumber, probability, wind, windForce, qProba;
+    static JTextField percentageField, forestNumber, probability, windForce, qProba;
+    private JFrame frame;
+    private Simulation sim;
+    private DessinGrille dg;
 
     static JLabel l1, l2, l3, l4, l5, l6, l7, l8;
 
-    public FInitForestFire() {
+    public FInitForestFire(Controller c, int cols, int rows) {
+    	
+        this.c = c;
+        this.rows = rows;
+        this.cols = cols;
+        this.gridWidth = 400; 
+        this.gridHeight = 400; 
+        
+        
         setTitle("Paramètres: Automate feu de forêt");
         setSize(LARGEUR, HAUTEUR);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -24,7 +40,7 @@ public class FInitForestFire extends JFrame {
         combobox1 = new JComboBox<>(s);
         combobox1.setPreferredSize(new Dimension(100, 20));
 
-        String v[] = {"Nord", "Sud", "Est", "Ouest"};
+        String v[] = {"Aucun", "Nord", "Sud", "Est", "Ouest"};
         combobox2 = new JComboBox<>(v);
         combobox2.setPreferredSize(new Dimension(100, 20)); 
 
@@ -49,6 +65,7 @@ public class FInitForestFire extends JFrame {
         l7 = new JLabel("Force du vent : ");
 
         l8 = new JLabel("Probabilité de Q: ");
+        
 
 
         JPanel mainPanel = new JPanel(new BorderLayout());
@@ -73,6 +90,17 @@ public class FInitForestFire extends JFrame {
                 checkBox1.setSelected(false);
             }
         });
+        
+        sim = new SimulationForestFire();
+        ((SimulationForestFire) sim).init_simulation(0, rows, cols, 0, false, 0, 0, "", 0);
+        
+        
+        dg = new DessinGrille(rows, cols, gridWidth, gridHeight, sim.getAutomate());
+        dg.setFocusable(true);
+        dg.addMouseListener(new ClickIniListener(c));
+        mainPanel.add(dg, BorderLayout.CENTER); 
+        setVisible(true);
+
     }
 
     private JPanel createButtonPanel() {
@@ -80,8 +108,11 @@ public class FInitForestFire extends JFrame {
         gridBtn.setLayout(new GridLayout(1, 2));
 
         JButton lancer = new JButton("Lancer");
-        lancer.addActionListener(e -> {
-        });
+        lancer.addActionListener(new LancerFFListener(c, combobox1, combobox2, checkBox1, 
+                percentageField, forestNumber, probability, windForce, qProba, frame));
+
+        
+        
 
         JButton fermer = new JButton("Quitter");
         fermer.addActionListener(e -> {
@@ -126,6 +157,9 @@ public class FInitForestFire extends JFrame {
         gbc.gridy = 1;
         JButton genererPourc = new JButton("Générer");
         optionsPanel.add(genererPourc, gbc);
+       //genererPourc.addActionListener(new GenererFFListener(c, ));
+
+        
 
         gbc.gridx = 0;
         gbc.gridy = 2;
@@ -160,19 +194,19 @@ public class FInitForestFire extends JFrame {
         gbc.gridx = 0;
         gbc.gridy = 5;
         optionsPanel.add(l6, gbc);
-
+        
         gbc.gridx = 1;
         gbc.gridy = 5;
-        wind = new JTextField(10); 
-        optionsPanel.add(wind, gbc); 
+        optionsPanel.add(combobox2, gbc); 
 
         gbc.gridx = 0;
         gbc.gridy = 6;
         optionsPanel.add(l7, gbc);
-
+        
         gbc.gridx = 1;
         gbc.gridy = 6;
-        optionsPanel.add(combobox2, gbc); 
+        windForce = new JTextField(10); 
+        optionsPanel.add(windForce, gbc); 
 
         gbc.gridx = 0;
         gbc.gridy = 7;
@@ -186,7 +220,7 @@ public class FInitForestFire extends JFrame {
         checkBox2.addItemListener(e -> {
             boolean isEnabled = !checkBox2.isSelected(); 
             probability.setEnabled(isEnabled);
-            wind.setEnabled(isEnabled);
+            windForce.setEnabled(isEnabled);
             combobox2.setEnabled(isEnabled);
             qProba.setEnabled(isEnabled);
         });
@@ -194,10 +228,27 @@ public class FInitForestFire extends JFrame {
         return optionsPanel;
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            FInitForestFire fff = new FInitForestFire();
-            fff.setVisible(true);
-        });
-    }
+	@Override
+	public DessinGrille getDessin() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Simulation getSimu() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int getRows() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int getCols() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }

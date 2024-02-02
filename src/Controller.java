@@ -38,7 +38,7 @@ public class Controller {
 		
 		switch(type) {
 		case "Jeu de la vie" : fi = new FInitLife(this, x, y);break;
-		case "Feu de forêt" : fi = new FInitLife(this, x, y);break;
+		case "Feu de forêt" : fi = new FInitForestFire(this, x, y);break;
 		case "Règle de majorité" : fi = new FInitLife(this, x, y);break;
 		case "1D" : fi = new FInit1D(this, x, 1);break;
 		case "Manuel" : fi = new FInitLife(this, x, y);break;
@@ -47,11 +47,9 @@ public class Controller {
 		
 		int tps = fa.getTps();
 		int ite = fa.getIte();
-		rt = new ReloadTimer(tps, ite, this);
-		
-
-		
+		rt = new ReloadTimer(tps, ite, this);	
 	}
+	
 
 	public void reload() {
 		fg.getSimu().rechargement();

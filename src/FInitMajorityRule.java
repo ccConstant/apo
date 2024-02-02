@@ -31,8 +31,8 @@ public class FInitMajorityRule extends JFrame implements FInit{
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         getContentPane().setLayout(new BorderLayout());
 
-        sim = new SimulationLifeGame();
-        ((SimulationLifeGame)sim).init_simulation(rows, cols);
+        /*sim = new SimulationMajorityRule();
+        ((SimulationMajorityRule())sim).init_simulation(rows, cols, null, null, null, null, );*/
 
         JPanel mainPanel = new JPanel(new BorderLayout());   
         dg = new DessinGrille(rows, cols, gridWidth, gridHeight, sim.getAutomate());
