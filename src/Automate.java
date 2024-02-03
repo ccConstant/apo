@@ -424,7 +424,7 @@ public class Automate {
 		}
 	}
 
-
+  //1D
   /**
      * Méthode pour obtenir les trois voisins d'une cellule en 1D
      * @param c cellule pour laquelle on veut obtenir les voisins
@@ -433,30 +433,28 @@ public class Automate {
     public ArrayList<Cellule> getThreeNeighbours(Cellule c) {
       int[] position = c.getPosition();
       ArrayList<Cellule> neighbours = new ArrayList<>();
-
+  
       // Voisin de gauche
       int leftX = (position[0] - 1 + largeur) % largeur;
       neighbours.add(getCelluleFromPosition(leftX, position[1], false));
-
+  
+      // La cellule elle-même
+      neighbours.add(c);
+  
       // Voisin de droite
       int rightX = (position[0] + 1) % largeur;
       neighbours.add(getCelluleFromPosition(rightX, position[1], false));
-
-      // La cellule elle-même
-      neighbours.add(c);
-
+  
       return neighbours;
-  }
-
-
+    }
       // méthode pour mettre à jour les cellules selon la règle spécifiée
     public void updateCells(int rule) {
       for (Cellule cell : cellules) {
           cell.updateCell(this, rule);
       }
-}
+    }
 
-
+  //1D    
 
 
 

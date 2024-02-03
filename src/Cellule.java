@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 public class Cellule{
@@ -311,30 +312,37 @@ public class Cellule{
     			
     	}
     }
+	//1D
 	public void updateCell(Automate automate, int rule) {
-		// Convertir le numéro de règle en binaire et remplir le tableau de règles
-		String binaryRule = String.format("%8s", Integer.toBinaryString(rule)).replace(' ', '0');
-		int[] ruleTable = new int[8];
+        // Convertir le numéro de règle en binaire et remplir le dictionnaire de règles
+        Map<String, Integer> ruleMap = generateRuleMap(rule);
 
-		for (int i = 0; i < 8; i++) {
-			ruleTable[i] = binaryRule.charAt(7 - i) - '0';
-		}
+        // Obtenez les états des voisins
+        ArrayList<Cellule> neighbours = automate.getThreeNeighbours(this);
+        StringBuilder binaryConfig = new StringBuilder();
 
-		// Obtenir les états des voisins
-		ArrayList<Cellule> neighbours = automate.getThreeNeighbours(this);
-		String binaryConfig = "";
+        for (int i = 0; i < 3; i++) {
+            binaryConfig.append(neighbours.get(i).getCurrentState().getState());
+        }
 
-		for (int i = 0; i < 3; i++) {
-			binaryConfig += neighbours.get(i).getCurrentState().getState();
-		}
+        // Utilisez le dictionnaire de règles pour obtenir le nouvel état
+        int newValue = ruleMap.get(binaryConfig.toString());
 
-		// Utiliser la table de règles pour obtenir le nouvel état
-		int binaryValue = Integer.parseInt(binaryConfig, 2);
-		int newValue = ruleTable[binaryValue];
+        setNextState(automate.getStates().get(newValue));
+    }
 
-		setNextState(automate.getStates().get(newValue));
-	}
+    private Map<String, Integer> generateRuleMap(int ruleNumber) {
+        Map<String, Integer> ruleMap = new HashMap<>();
+        String binaryRule = String.format("%8s", Integer.toBinaryString(ruleNumber)).replace(' ', '0');
 
+        for (int i = 0; i < 8; i++) {
+            String binaryConfig = String.format("%3s", Integer.toBinaryString(i)).replace(' ', '0');
+            ruleMap.put(binaryConfig, binaryRule.charAt(7 - i) - '0');
+        }
+
+        return ruleMap;
+    }
+	//1D
 
 
 	public void updateCellMajority(Automate automate) {
