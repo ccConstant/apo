@@ -315,23 +315,23 @@ public class Cellule{
 		// Convertir le numéro de règle en binaire et remplir le tableau de règles
 		String binaryRule = String.format("%8s", Integer.toBinaryString(rule)).replace(' ', '0');
 		int[] ruleTable = new int[8];
-	
+
 		for (int i = 0; i < 8; i++) {
 			ruleTable[i] = binaryRule.charAt(7 - i) - '0';
 		}
-	
+
 		// Obtenir les états des voisins
 		ArrayList<Cellule> neighbours = automate.getThreeNeighbours(this);
-		StringBuilder binaryConfig = new StringBuilder();
-	
+		String binaryConfig = "";
+
 		for (int i = 0; i < 3; i++) {
-			binaryConfig.append(neighbours.get(i).getCurrentState().getState());
+			binaryConfig += neighbours.get(i).getCurrentState().getState();
 		}
-	
+
 		// Utiliser la table de règles pour obtenir le nouvel état
-		int binaryValue = Integer.parseInt(binaryConfig.toString(), 2);
+		int binaryValue = Integer.parseInt(binaryConfig, 2);
 		int newValue = ruleTable[binaryValue];
-	
+
 		setNextState(automate.getStates().get(newValue));
 	}
 
