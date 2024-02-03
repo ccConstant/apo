@@ -51,12 +51,15 @@ public class DessinGrille extends JPanel { /* implements Serializable{
                     
                 	Cellule c = a.getCelluleFromPosition(j, i, hexa);
                     State s = c.getCurrentState();
-                    Color col = new Color(s.getR(), s.getG(), s.getB());
-                    g.setColor(col);
-                    g.fillRect(x, y, cellSize, cellSize);
+                    if(s.getR() != -1) {
+                    	Color col = new Color(s.getR(), s.getG(), s.getB());
+                        g.setColor(col);
+                        g.fillRect(x, y, cellSize, cellSize);
+                        
+                        g.setColor(Color.BLACK);
+                        g.drawRect(x, y, cellSize, cellSize);
+                    }
                     
-                    g.setColor(Color.BLACK);
-                    g.drawRect(x, y, cellSize, cellSize);
                 }
             }
         } else {

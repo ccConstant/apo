@@ -70,7 +70,7 @@ public class FInitManuel1 extends JFrame implements FInit{
         
         JLabel e1 = new JLabel("Etat 1 : ");
         JLabel n1 = new JLabel("Nom : ");
-        TFn1 = new JTextField();
+        TFn1 = new JTextField("0");
         JLabel r1 = new JLabel("R : ");
         TFr1 = new JTextField("0");
         JLabel g1 = new JLabel("G : ");
@@ -96,13 +96,13 @@ public class FInitManuel1 extends JFrame implements FInit{
         
         JLabel e2 = new JLabel("Etat 2 : ");
         JLabel n2 = new JLabel("Nom : ");
-        TFn2 = new JTextField();
+        TFn2 = new JTextField("1");
         JLabel r2 = new JLabel("R : ");
-        TFr2 = new JTextField("0");
+        TFr2 = new JTextField("40");
         JLabel g2 = new JLabel("G : ");
-        TFg2 = new JTextField("0");
+        TFg2 = new JTextField("40");
         JLabel b2 = new JLabel("B : ");
-        TFb2 = new JTextField("0");
+        TFb2 = new JTextField("40");
         JLabel d2 = new JLabel("Def : ");
         CBdef2 = new JCheckBox();
         
@@ -123,13 +123,13 @@ public class FInitManuel1 extends JFrame implements FInit{
         CBe3.setSelected(true);
         JLabel e3 = new JLabel("Etat 3 : ");
         JLabel n3 = new JLabel("Nom : ");
-        TFn3 = new JTextField();
+        TFn3 = new JTextField("2");
         JLabel r3 = new JLabel("R : ");
-        TFr3 = new JTextField("0");
+        TFr3 = new JTextField("80");
         JLabel g3 = new JLabel("G : ");
-        TFg3 = new JTextField("0");
+        TFg3 = new JTextField("80");
         JLabel b3 = new JLabel("B : ");
-        TFb3 = new JTextField("0");
+        TFb3 = new JTextField("80");
         JLabel d3 = new JLabel("Def : ");
         CBdef3 = new JCheckBox();
         
@@ -191,9 +191,7 @@ public class FInitManuel1 extends JFrame implements FInit{
 
         JButton opt = new JButton("Lancer la simulation");
         opt.addActionListener(e -> {
-        	System.out.println(this.createStates());
-        	createVoisin();
-            c.nextManuel( );
+            c.nextManuel(createVoisin(), createStates() );
         });
         add(opt, BorderLayout.SOUTH);
     }
@@ -278,8 +276,6 @@ public class FInitManuel1 extends JFrame implements FInit{
 				if(auto.getCelluleFromPosition(j, i, false).getCurrentState().toString().equals("selected")) {
 					voisin[nbVoisin-cpt][0] = i-1;
 					voisin[nbVoisin-cpt][1] = j-1;
-					System.out.println(voisin[nbVoisin-cpt][0]);
-					System.out.println(voisin[nbVoisin-cpt][1]);
 					
 					cpt--;
 				}
