@@ -2,8 +2,6 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 
 public class FInit1D extends JFrame implements FInit {
     static int HAUTEUR = 230;
@@ -21,24 +19,22 @@ public class FInit1D extends JFrame implements FInit {
     private int gridHeight;
     private JFrame frame;
 
-    
-
-
     public FInit1D(Controller c, int cols, int rows) {
         this.c = c;
         this.rows = rows;
         this.cols = cols;
-
         this.gridWidth = 400;
         this.gridHeight = 400;
+        
+        sim = new Simulation1D();
+        ((Simulation1D) sim).init_simulation(rows, cols, 0);
 
         setTitle("Paramètres: Automate feu de forêt");
         setSize(LARGEUR, HAUTEUR);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         getContentPane().setLayout(new BorderLayout());
 
-        sim = new SimulationLifeGame();
-        ((SimulationLifeGame) sim).init_simulation(rows, cols);
+
 
         l1 = new JLabel("Saisir règle: ");
         ruleField = new JTextField(10);
@@ -67,7 +63,7 @@ public class FInit1D extends JFrame implements FInit {
         gridBtn.setLayout(new GridLayout(1, 2));
 
         JButton lancer = new JButton("Lancer");
-        //lancer.addActionListener(e -> Lancer1DListener(ruleField, frame));
+        lancer.addActionListener(new Lancer1DListener(c, ruleField, frame, sim));
 
         JButton fermer = new JButton("Quitter");
         fermer.addActionListener(e -> dispose());
@@ -83,7 +79,7 @@ public class FInit1D extends JFrame implements FInit {
         optionsPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.anchor = GridBagConstraints.LINE_START; // Align components to the left
+        gbc.anchor = GridBagConstraints.LINE_START; 
 
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -110,7 +106,7 @@ public class FInit1D extends JFrame implements FInit {
 
         gbc.gridx = 0;
         gbc.gridy = 1;
-        gbc.gridwidth = 3; // Span all columns
+        gbc.gridwidth = 3; 
         optionsPanel.add(scrollPane, gbc);
 
         return optionsPanel;

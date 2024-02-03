@@ -12,22 +12,19 @@ public class LancerFFListener implements ActionListener {
     private JComboBox<Integer> combobox1;
     private JComboBox<String> combobox2;
     private JCheckBox checkBox1;
-    private JTextField percentageField, fireNumber, probability, windForce, qProba;
+    private JTextField fireNumber, probability, windForce, qProba;
     private JFrame frame;
     private Simulation sim;
-    private int rows;
-    private int cols;
 
 
     public LancerFFListener(Controller c, JComboBox<Integer> combobox1, JComboBox<String> combobox2,
-                            JCheckBox checkBox1, JTextField percentageField,
+                            JCheckBox checkBox1,
                             JTextField fireNumber, JTextField probability, JTextField windForce,
                             JTextField qProba, JFrame frame, Simulation sim) {
         this.c = c;
         this.combobox1 = combobox1;
         this.combobox2 = combobox2;
         this.checkBox1 = checkBox1;
-        this.percentageField = percentageField;
         this.fireNumber = fireNumber;
         this.probability = probability;
         this.windForce = windForce;

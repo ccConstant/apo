@@ -1,69 +1,51 @@
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
+import java.awt.BorderLayout;
 
-import java.awt.*;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+import javax.swing.JButton;
+import javax.swing.JFrame;
 
 public class FInitMajorityRule extends JFrame implements FInit{
-    static int HAUTEUR = 600;
-    final static int LARGEUR = 900;
 
-	private Controller c;
-	private int rows;
-	private int cols;
-	private Simulation sim;
-	private DessinGrille dg;
-	private int gridWidth;
-	private int gridHeight;
+    private int rows;
+    private int cols;
+    private int gridWidth;
+    private int gridHeight;
 
-    public FInitMajorityRule(Controller c, int cols, int rows) {
-    	
-    	this.c = c;
+    private Controller c;
+    private DessinGrille dg;
+    
+    private Simulation sim;
+    
+	public FInitMajorityRule(Controller c, int cols, int rows) {
+        this.c = c;
         this.rows = rows;
         this.cols = cols;
-
         this.gridWidth = 400; 
         this.gridHeight = 400; 
+
+        setTitle("Règle de majorité");
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setSize(440, 480);
+        setLocationRelativeTo(c.getAccueil());
         
-        setTitle("Paramètres: Automate régle de la majorité: ");
-        setSize(LARGEUR, HAUTEUR);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        getContentPane().setLayout(new BorderLayout());
+        sim = new SimulationMajority();
+        ((SimulationMajority)sim).init_simulation(rows, cols);
 
-        /*sim = new SimulationMajorityRule();
-        ((SimulationMajorityRule())sim).init_simulation(rows, cols, null, null, null, null, );*/
+        elementFenetre();
 
-        JPanel mainPanel = new JPanel(new BorderLayout());   
+        setVisible(true);
+        
+	}
+	public void elementFenetre() {
+        this.getContentPane().setLayout(new BorderLayout());
+        
         dg = new DessinGrille(rows, cols, gridWidth, gridHeight, sim.getAutomate());
         dg.setFocusable(true);
         dg.addMouseListener(new ClickIniListener(c));
-        mainPanel.add(dg, BorderLayout.NORTH);     
-        mainPanel.add(createButtonPanel(), BorderLayout.SOUTH);
-        
-        
-        getContentPane().add(mainPanel);
+        add(dg, BorderLayout.CENTER);
 
-        setLocationRelativeTo(null);
-        setVisible(true);
-    }
-
-    private JPanel createButtonPanel() {
-        JPanel gridBtn = new JPanel();
-        gridBtn.setLayout(new GridLayout(1, 2));
-
-        JButton lancer = new JButton("Lancer");
-        lancer.addActionListener(e -> {
-
-        });
-
-        JButton fermer = new JButton("Quitter");
-        fermer.addActionListener(e -> dispose());
-
-        gridBtn.add(lancer);
-        gridBtn.add(fermer);
-
-        return gridBtn;
+        JButton opt = new JButton("Lancer la simulation");
+        opt.addActionListener(new LancerListener(c));
+        add(opt, BorderLayout.SOUTH);
     }
 	
     public DessinGrille getDessin() {
@@ -82,5 +64,9 @@ public class FInitMajorityRule extends JFrame implements FInit{
 	public int getCols() {
 		return cols;
 	}
-
+	@Override
+	public void setVisible(boolean b) {
+		super.setVisible(b);
+		
+	}
 }

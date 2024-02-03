@@ -7,11 +7,25 @@ public class Automate {
     ArrayList<State> states= new ArrayList<State>() ;
     int voisins[][]; // doit être de taille [nombreVoisins][d]
     ArrayList<Cellule> cellules = new ArrayList<Cellule>() ;
-    int longueur ;
-    int largeur;
+    int longueur=0;
+    int largeur=0;
     int nombreVoisins=0;
+    int z=0; 
     
-
+    /** 
+     * Constructeur
+     * @param d dimension de l'automate
+     * @param states états dans lesquels les cellules de l'automate peuvent être
+     * @param voisins position des différentes voisins d'une cellule
+     * @param largeur de la grille
+     */
+    public Automate(int d, ArrayList<State> states, int voisins[][], int largeur) {
+        this.d = 0; 
+        this.states = states;
+        this.voisins = voisins; 
+        this.largeur=largeur;
+    }
+    
     /** 
      * Constructeur
      * @param d dimension de l'automate
@@ -27,8 +41,42 @@ public class Automate {
         this.longueur=longueur;
         this.largeur=largeur;
     }
-
+    
     /** 
+     * Constructeur
+     * @param d dimension de l'automate
+     * @param states états dans lesquels les cellules de l'automate peuvent être
+     * @param voisins position des différentes voisins d'une cellule
+     * @param longueur de la grille
+     * @param largeur de la grille
+     * @param z de la grille
+     */
+    public Automate(int d, ArrayList<State> states, int voisins[][], int longueur, int largeur, int z) {
+        this.d = 0; 
+        this.states = states;
+        this.voisins = voisins; 
+        this.longueur=longueur;
+        this.largeur=largeur;
+        this.z=z;
+    }
+    
+    /**
+     * Setter du nombre de voisin considéré
+     * @param nombre de voisins à considérer
+     */
+    public void setNombreVoisins(int nombreVoisins) {
+    	this.nombreVoisins=nombreVoisins;
+    }
+    
+    /**
+     * Getter du nombre de voisin
+     * @return int nombre de voisins d'une cellule
+     */
+    public int getNombreVoisins() {
+    	return nombreVoisins;
+    }
+    
+	/** 
      * Affiche un automate : pour cela on affiche toutes les cellules de l'automate en question 
      */
     public void print() { 
@@ -58,6 +106,8 @@ public class Automate {
 			}
 		}
     }
+    
+    
     
     /** 
      * Initialise aléatoirement l'état de toutes cellules de l'automate à un des états appartenant à la liste d'états passée en paramètre
@@ -107,6 +157,14 @@ public class Automate {
      */
     public int getLargeur(){
     	return largeur;
+    }
+    
+    /**
+     * Getter de la dimension de l'automate
+     * @return int dimension de l'automate
+     */
+    public int getDimension(){
+    	return d;
     }
 
     /**
@@ -178,6 +236,7 @@ public class Automate {
      * Getter de la cellule située à l'ouest de la cellule traitée
      * @param x abscisse de la cellule dont on cherche la voisine de l'ouest
      * @param y ordonnée de la cellule dont on cherche la voisine de l'ouest
+     * @param hexa est-ce qu'il s'agit d'une grille hexagonale?
      * @return Cellule une cellule de l'automate
      */
     public Cellule getCelluleOuest(int x, int y, boolean hexa) {
@@ -191,6 +250,7 @@ public class Automate {
     /**
      * Getter des différentes voisins d'une cellule
      * @param c cellule dont veut récupérer les voisins
+     * @param hexa est-ce qu'il s'agit d'une grille hexagonale?
      * @return ArrayList<Cellule> une liste de Cellule contenant les voisins de la cellule passée en paramètre
      */
     public ArrayList<Cellule> getVoisins2D(Cellule c, boolean hexa) {
@@ -207,10 +267,32 @@ public class Automate {
     	return cellulesVoisines;
     }
     
+    
+    /**
+     * Getter des différentes voisins d'une cellule 
+     * @param c cellule dont veut récupérer les voisins
+     * @return ArrayList<Cellule> une liste de Cellule contenant les voisins de la cellule passée en paramètre
+     */
+    public ArrayList<Cellule> getVoisins3D(Cellule c) {
+    	int[] position=c.getPosition();
+    	ArrayList<Cellule> cellulesVoisines=new ArrayList<Cellule>() ; 
+    	for (int i=0 ; i<nombreVoisins ; i++) {
+    		int abscisse=position[0]+voisins[i][0]; 
+    		int ordonnee= position[1]+voisins[i][1] ;
+    		int z= position[2]+voisins[i][2]; 
+			//Cellule a=getCelluleFromPosition(abscisse, ordonnee, z, false);  //TODO
+			//if (a!=null) {
+				//cellulesVoisines.add(a);
+			//}
+    	}
+    	return cellulesVoisines;
+    }
+    
     /**
      * Calcule le nombre cellules voisines qui se trouvent dans l'état passé en paramètre 
      * @param s état dans lequel se trouve les cellules comptabilisées
      * @param c cellule dont veut analyser les voisins
+     * @param hexa est-ce qu'il s'agit d'une grille hexagonale?
      * @return int le nombre de cellules voisines de la cellule c se trouvant dans l'état s 
      */
     public int nbrVoisinsInState(State s, Cellule c, boolean hexa) {
@@ -342,4 +424,99 @@ public class Automate {
 			}
 		}
 	}
+
+
+
+
+    /**
+     * Méthode pour obtenir les trois voisins d'une cellule en 1D
+     * @param c cellule pour laquelle on veut obtenir les voisins
+     * @return ArrayList<Cellule> liste de trois voisins (gauche, droite et cellule elle-même)
+     */
+    public ArrayList<Cellule> getThreeNeighbours(Cellule c) {
+      int[] position = c.getPosition();
+      ArrayList<Cellule> neighbours = new ArrayList<>();
+
+      // Voisin de gauche
+      int leftX = (position[0] - 1 + largeur) % largeur;
+      neighbours.add(getCelluleFromPosition(leftX, position[1], false));
+
+      // Voisin de droite
+      int rightX = (position[0] + 1) % largeur;
+      neighbours.add(getCelluleFromPosition(rightX, position[1], false));
+
+      // La cellule elle-même
+      neighbours.add(c);
+
+      return neighbours;
+    }
+
+
+      // méthode pour mettre à jour les cellules selon la règle spécifiée
+    public void updateCells(int rule) {
+      for (Cellule cell : cellules) {
+          cell.updateCell(this, rule);
+      }
+    }
+
+    public void updateCellMajority(Cellule cell) {
+      ArrayList<Cellule> neighbours = getNeighbours(cell);
+      int[] countStates = new int[states.size()];
+
+      // Compter le nombre d'occurrences de chaque état parmi les voisins
+      for (Cellule neighbour : neighbours) {
+          countStates[getStateIndex(neighbour.getCurrentState())]++;
+      }
+
+      // Trouver l'état majoritaire
+      int majorityState = findMajorityState(countStates);
+
+      // Mettre à jour l'état de la cellule
+      cell.setNextState(states.get(majorityState));
+
+    }
+
+      // Méthode pour trouver l'index de l'état majoritaire
+      private int findMajorityState(int[] countStates) {
+        int majorityState = 0;
+        int maxCount = 0;
+
+        for (int i = 0; i < countStates.length; i++) {
+            if (countStates[i] > maxCount) {
+                maxCount = countStates[i];
+                majorityState = i;
+            }
+        }
+
+        return majorityState;
+      }
+
+      public ArrayList<Cellule> getNeighbours(Cellule cell) {
+        int[] position = cell.getPosition();
+        ArrayList<Cellule> neighbours = new ArrayList<>();
+
+        // Voisin de gauche
+        int leftX = (position[0] - 1 + largeur) % largeur;
+        neighbours.add(getCelluleFromPosition(leftX, position[1], false));
+
+        // Voisin de droite
+        int rightX = (position[0] + 1) % largeur;
+        neighbours.add(getCelluleFromPosition(rightX, position[1], false));
+
+        // La cellule elle-même
+        neighbours.add(cell);
+
+        return neighbours;
+      }
+
+      public int getStateIndex(State state) {
+        return states.indexOf(state);
+      }
+
+      public void updateCellsMajority() {
+        for (Cellule cell : cellules) {
+            cell.updateCellMajority(this);
+        }
+      }
+
 }

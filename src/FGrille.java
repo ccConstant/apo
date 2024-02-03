@@ -2,10 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.Serializable;
 
-public class FGrille extends JFrame{/* implements Serializable{
+public class FGrille extends JFrame{
 	
-	private static final long serialVersionUID = 2L;*/
-
     private int rows;
     private int cols;
     private int gridWidth;
@@ -22,10 +20,9 @@ public class FGrille extends JFrame{/* implements Serializable{
         this.cols = cols;
         this.gridWidth = 400; 
         this.gridHeight = 400; 
-        
         this.sim = sim;
-
-        setTitle("Grille paramétrée");
+        
+        setTitle("Simulation Automate");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(440, 480);
         setLocationRelativeTo(c.getAccueil());
@@ -47,9 +44,7 @@ public class FGrille extends JFrame{/* implements Serializable{
 		JPanel gridBas = new JPanel(); 
 		gridBas.setLayout(new GridLayout(1,2));
 		
-		//restart.addActionListener(new RejouerListener(this));
 		JButton quitter = new JButton("Quitter");
-		//save.addActionListener(new SaveListener(this));
         JButton ps = new JButton("Reprendre");
         ps.addActionListener(new PauseListener(c, ps));
         add(ps, BorderLayout.SOUTH);

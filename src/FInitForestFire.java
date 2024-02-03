@@ -1,11 +1,10 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 
 public class FInitForestFire extends JFrame implements FInit {
     static int HAUTEUR = 750;
-    final static int LARGEUR = 500;
+    final static int LARGEUR = 440;
     
     private int rows;
     private int cols;
@@ -19,7 +18,7 @@ public class FInitForestFire extends JFrame implements FInit {
     private JFrame frame;
     private Simulation sim;
     private DessinGrille dg;
-
+	private boolean isDisabled;
     static JLabel l1, l2, l3, l4, l5, l6, l7, l8;
 
     public FInitForestFire(Controller c, int cols, int rows) {
@@ -120,8 +119,7 @@ public class FInitForestFire extends JFrame implements FInit {
         gridBtn.setLayout(new GridLayout(1, 2));
 
         JButton lancer = new JButton("Lancer");
-        lancer.addActionListener(new LancerFFListener(c, combobox1, combobox2, checkBox1, 
-                percentageField, fireNumber, probability, windForce, qProba, frame, sim));
+        lancer.addActionListener(new LancerFFListener(c, combobox1, combobox2, checkBox1, fireNumber, probability, windForce, qProba, frame, sim));
 
         
         
@@ -213,6 +211,8 @@ public class FInitForestFire extends JFrame implements FInit {
         gbc.gridx = 1;
         gbc.gridy = 5;
         optionsPanel.add(combobox2, gbc); 
+
+
 
         gbc.gridx = 0;
         gbc.gridy = 6;

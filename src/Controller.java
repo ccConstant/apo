@@ -41,7 +41,7 @@ public class Controller {
 		switch(type) {
 		case "Jeu de la vie" : fi = new FInitLife(this, x, y);break;
 		case "Feu de forêt" : fi = new FInitForestFire(this, x, y);break;
-		case "Règle de majorité" : fi = new FInitLife(this, x, y);break;
+		case "Règle de majorité" : fi = new FInitMajorityRule(this, x, y);break;
 		case "1D" : fi = new FInit1D(this, x, 1);break;
 		case "Manuel" : fi = new FInitManuel1(this, x, y);break;
 		}
