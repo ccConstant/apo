@@ -33,9 +33,4 @@ public class Simulation1D implements Simulation {
     public Automate getAutomate() {
         return automate;
     }
-    
-    public void setRule(int regle) {
-    	this.regle = regle;
-    	
-    }
 }

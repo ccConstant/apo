@@ -311,31 +311,34 @@ public class Cellule{
     			
     	}
     }
-
 	public void updateCell(Automate automate, int rule) {
-		int[] voisinsStates = new int[3];
-		ArrayList<Cellule> neighbours = automate.getThreeNeighbours(this);
+		// Convertir le numéro de règle en binaire et remplir le tableau de règles
+		String binaryRule = String.format("%8s", Integer.toBinaryString(rule)).replace(' ', '0');
+		int[] ruleTable = new int[8];
 	
-		for (int i = 0; i < 3; i++) {
-			voisinsStates[i] = Integer.parseInt(neighbours.get(i).getCurrentState().getState());
+		for (int i = 0; i < 8; i++) {
+			ruleTable[i] = binaryRule.charAt(7 - i) - '0';
 		}
 	
-		// Calcul de la valeur binaire
-		int binaryValue = voisinsStates[0] * 4 + voisinsStates[1] * 2 + voisinsStates[2];
+		// Obtenir les états des voisins
+		ArrayList<Cellule> neighbours = automate.getThreeNeighbours(this);
+		StringBuilder binaryConfig = new StringBuilder();
 	
-		// Utilisation du bit correspondant de la règle (en prenant en compte l'ordre 111, 110, 101, 100, 011, 010, 001, 000)
-		int bit = (rule & (1 << (7 - binaryValue))) >> (7 - binaryValue);
+		for (int i = 0; i < 3; i++) {
+			binaryConfig.append(neighbours.get(i).getCurrentState().getState());
+		}
 	
-		// Utilisation de l'opérateur modulo pour assurer que la valeur reste dans les limites
-		int newValue = (voisinsStates[1] + bit + automate.getStates().size()) % automate.getStates().size();
+		// Utiliser la table de règles pour obtenir le nouvel état
+		int binaryValue = Integer.parseInt(binaryConfig.toString(), 2);
+		int newValue = ruleTable[binaryValue];
 	
 		setNextState(automate.getStates().get(newValue));
 	}
 
 
 
-
 	public void updateCellMajority(Automate automate) {
 		automate.updateCellMajority(this);
 	}
+
 }
