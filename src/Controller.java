@@ -1,5 +1,6 @@
 import java.awt.Component;
 import java.util.ArrayList;
+import java.util.Map;
 
 import javax.swing.JButton;
 
@@ -11,6 +12,9 @@ public class Controller {
 	
 	private ReloadTimer rt;
 	private boolean hexa;
+	private int x;
+	private int y;
+	private int z;
 	
 	public Controller() {
 		fa = new FenetreAccueil(this);
@@ -34,16 +38,26 @@ public class Controller {
 	
 	public void generer(String type) {
 		fa.setVisible(false);
-		int x = fa.getValX();
-		int y = fa.getValY();
-		int z = fa.getValZ();
+		if (type.equals("Manuel")) {
+			switch(fa.getDim()) {
+	        case 1 : x = fa.getValX(); y=1; z=1;break;
+	        case 2 :  x = fa.getValX(); y=fa.getValY(); z=1;break;
+	        case 3 :  x = fa.getValX(); y=fa.getValY(); z=fa.getValZ();break;
+	        }
+		} else {
+			x = fa.getValX();
+			y = fa.getValY();
+			z = fa.getValZ();
+		}
+		
+
 		
 		switch(type) {
 		case "Jeu de la vie" : fi = new FInitLife(this, x, y);break;
 		case "Feu de forêt" : fi = new FInitForestFire(this, x, y);break;
 		case "Règle de majorité" : fi = new FInitMajorityRule(this, x, y);break;
 		case "1D" : fi = new FInit1D(this, x, 1);break;
-		case "Manuel" : fi = new FInitManuel1(this, x, y);break;
+		case "Manuel" : fi = new FInitManuel1(this, x, y, z, fa.getDim());break;
 		}
 		
 		
@@ -105,9 +119,6 @@ public class Controller {
 
 	public void lancer() {
 		fi.setVisible(false);
-		int x = fa.getValX();
-		int y = fa.getValY();
-		int z = fa.getValZ();
 		fg = new FGrille(this, x, y, fi.getSimu());
 		rt.startReload();
 		
@@ -119,10 +130,15 @@ public class Controller {
 
 	public void nextManuel(int[][] voisins, ArrayList<State> arrayList) {
 		fi.setVisible(false);
-		fi = new FInitManuel2(this,fa.getValX(), fa.getValY() , voisins, arrayList);
+		fi = new FInitManuel2(this,x, y , voisins, arrayList, z, fa.getDim());
 		fi.setVisible(true);
 	}
 	
+	public void initManuel(int[][] voisins, ArrayList<State> arrayList, Map<String, State> regle) {
+		fi.setVisible(false);
+		fi = new FInitManuel3(this,x, y , voisins, arrayList, regle, z, fa.getDim());
+		fi.setVisible(true);
+	}
 	
 	
 

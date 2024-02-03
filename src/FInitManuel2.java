@@ -12,6 +12,9 @@ public class FInitManuel2 extends JFrame implements FInit{
 
     private int rows;
     private int cols;
+    private int z;
+    private int dim;
+    
     private int gridWidth;
     private int gridHeight;
 
@@ -26,11 +29,13 @@ public class FInitManuel2 extends JFrame implements FInit{
 	
 	private Map<String, State> regle;
     
-	public FInitManuel2(Controller c, int cols, int rows, int[][] voisins, ArrayList<State> arrayList) {
+	public FInitManuel2(Controller c, int cols, int rows, int[][] voisins, ArrayList<State> arrayList, int z, int dim) {
         this.c = c;
         this.rows = rows;
         this.cols = cols;
-        this.gridWidth = 600; 
+        this.z = z;
+        this.dim = dim;
+        this.gridWidth = 500; 
         this.gridHeight = 450; 
         
         regle = new HashMap<String, State>();
@@ -54,7 +59,11 @@ public class FInitManuel2 extends JFrame implements FInit{
         ArrayList<State> states=new ArrayList<State>();
         states.addAll(arrayList);
         states.add(rien);
-        auto = new Automate(2,states , null, 3, 3);
+        switch(dim) {
+        case 1 : auto = new Automate(2,states , null, 3);break;
+        case 2 : auto = new Automate(2,states , null, 3, 3);break;
+        case 3 : auto = new Automate(2,states , null, 3, 3, 3);break;
+        }
         auto.initCellules(rien);
         for (int i = 0; i<voisins.length;i++) {
         	Cellule cell = auto.getCelluleFromPosition( voisins[i][1]+1, voisins[i][0]+1, false);
@@ -79,7 +88,7 @@ public class FInitManuel2 extends JFrame implements FInit{
         
         
         
-        dg = new DessinGrille(3, 3, gridWidth, gridHeight, auto);
+        dg = new DessinGrille(auto.getLongueur(), auto.getLargeur(), gridWidth, gridHeight, auto);
         dg.setFocusable(true);
         dg.addMouseListener(new ClickIniListener(c));
         add(dg, BorderLayout.CENTER);
@@ -108,7 +117,7 @@ public class FInitManuel2 extends JFrame implements FInit{
         
         JButton opt = new JButton("Lancer la simulation");
         opt.addActionListener(e -> {
-
+        	c.initManuel(voisins, arrayList, regle);
         });
         JButton quit = new JButton("Quitter");
         quit.addActionListener(e -> {

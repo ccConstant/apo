@@ -6,10 +6,10 @@ public class Automate {
     ArrayList<State> states= new ArrayList<State>() ;
     int voisins[][]; // doit être de taille [nombreVoisins][d]
     ArrayList<Cellule> cellules = new ArrayList<Cellule>() ;
-    int longueur=0;
-    int largeur=0;
+    int longueur=1;
+    int largeur=1;
     int nombreVoisins=0;
-    int z=0; 
+    int z=1; 
     
     /** 
      * Constructeur
@@ -19,7 +19,7 @@ public class Automate {
      * @param largeur de la grille
      */
     public Automate(int d, ArrayList<State> states, int voisins[][], int largeur) {
-        this.d = 0; 
+        this.d = d; 
         this.states = states;
         this.voisins = voisins; 
         this.largeur=largeur;
@@ -34,7 +34,7 @@ public class Automate {
      * @param largeur de la grille
      */
     public Automate(int d, ArrayList<State> states, int voisins[][], int longueur, int largeur) {
-        this.d = 0; 
+        this.d = d; 
         this.states = states;
         this.voisins = voisins; 
         this.longueur=longueur;
@@ -51,7 +51,7 @@ public class Automate {
      * @param z de la grille
      */
     public Automate(int d, ArrayList<State> states, int voisins[][], int longueur, int largeur, int z) {
-        this.d = 0; 
+        this.d = d; 
         this.states = states;
         this.voisins = voisins; 
         this.longueur=longueur;

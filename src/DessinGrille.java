@@ -48,7 +48,8 @@ public class DessinGrille extends JPanel { /* implements Serializable{
                 for (int j = 0; j < rows; j++) {
                 	int x = startX + j * cellSize;
                     int y = startY + i * cellSize;
-                    
+                    System.out.print(j);
+                    System.out.println(" " + i);
                 	Cellule c = a.getCelluleFromPosition(j, i, hexa);
                     State s = c.getCurrentState();
                     if(s.getR() != -1) {

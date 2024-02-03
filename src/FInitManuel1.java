@@ -9,6 +9,9 @@ public class FInitManuel1 extends JFrame implements FInit{
 
     private int rows;
     private int cols;
+    private int z;
+    private int dim;
+    
     private int gridWidth;
     private int gridHeight;
 
@@ -34,12 +37,14 @@ public class FInitManuel1 extends JFrame implements FInit{
 	private JCheckBox CBe3;
     
     
-	public FInitManuel1(Controller c, int cols, int rows) {
+	public FInitManuel1(Controller c, int cols, int rows, int z, int d) {
         this.c = c;
         this.rows = rows;
         this.cols = cols;
-        this.gridWidth = 600; 
-        this.gridHeight = 450; 
+        this.z = z;
+        this.dim = d;
+        this.gridWidth = 550; 
+        this.gridHeight = 400; 
 
         setTitle("Choix états et voisins");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -53,7 +58,11 @@ public class FInitManuel1 extends JFrame implements FInit{
         ArrayList<State> states=new ArrayList<State>();
         states.add(selected);
         states.add(unselected);
-        auto = new Automate(2,states , null, 3, 3);
+        switch(dim) {
+        case 1 : auto = new Automate(2,states , null, 3);break;
+        case 2 : auto = new Automate(2,states , null, 3, 3);break;
+        case 3 : auto = new Automate(2,states , null, 3, 3, 3);break;
+        }
         auto.initCellules(unselected);
         auto.print();
         
@@ -184,7 +193,7 @@ public class FInitManuel1 extends JFrame implements FInit{
         
         
         add(etats, BorderLayout.NORTH);
-        dg = new DessinGrille(3, 3, gridWidth, gridHeight, auto);
+        dg = new DessinGrille(auto.getLongueur(), auto.getLargeur(), gridWidth, gridHeight, auto);
         dg.setFocusable(true);
         dg.addMouseListener(new ClickIniListener(c));
         add(dg, BorderLayout.CENTER);
@@ -261,8 +270,8 @@ public class FInitManuel1 extends JFrame implements FInit{
 	
 	public int[][] createVoisin(){
 		int cpt = 0;
-		for(int i = 0; i<auto.getLargeur(); i++) {
-			for(int j = 0; j<auto.getLongueur(); j++) {
+		for(int i = 0; i<auto.getLongueur(); i++) {
+			for(int j = 0; j<auto.getLargeur(); j++) {
 				if(auto.getCelluleFromPosition(j, i, false).getCurrentState().toString().equals("selected")) {
 					cpt += 1;
 				}
@@ -271,8 +280,8 @@ public class FInitManuel1 extends JFrame implements FInit{
 		int nbVoisin = cpt;
 		int[][] voisin = new int[cpt][2];
 		
-		for(int i = 0; i<auto.getLargeur(); i++) {
-			for(int j = 0; j<auto.getLongueur(); j++) {
+		for(int i = 0; i<auto.getLongueur(); i++) {
+			for(int j = 0; j<auto.getLargeur(); j++) {
 				if(auto.getCelluleFromPosition(j, i, false).getCurrentState().toString().equals("selected")) {
 					voisin[nbVoisin-cpt][0] = i-1;
 					voisin[nbVoisin-cpt][1] = j-1;

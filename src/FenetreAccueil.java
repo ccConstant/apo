@@ -59,7 +59,7 @@ public class FenetreAccueil extends JFrame{
 		
 		//TextField temps itération
 		JLabel lbTmp = new JLabel("Temps d'une itération (s) : ",SwingConstants.CENTER);
-		tfTmp = new JTextField("5");
+		tfTmp = new JTextField("3");
 				
 		gridMid.add(lbTmp);
 		gridMid.add(tfTmp);
@@ -127,6 +127,10 @@ public class FenetreAccueil extends JFrame{
 	}
 	public int getTps() {
 		return Integer.parseInt(tfTmp.getText());
+	}
+
+	public int getDim() {
+		return slDim.getValue();
 	}
 	
 }
