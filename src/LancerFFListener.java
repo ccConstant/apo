@@ -12,54 +12,66 @@ public class LancerFFListener implements ActionListener {
     private JComboBox<Integer> combobox1;
     private JComboBox<String> combobox2;
     private JCheckBox checkBox1;
-    private JTextField percentageField, forestNumber, probability, windForce, qProba;
+    private JTextField percentageField, fireNumber, probability, windForce, qProba;
     private JFrame frame;
+    private Simulation sim;
+    private int rows;
+    private int cols;
+
 
     public LancerFFListener(Controller c, JComboBox<Integer> combobox1, JComboBox<String> combobox2,
                             JCheckBox checkBox1, JTextField percentageField,
-                            JTextField forestNumber, JTextField probability, JTextField windForce,
-                            JTextField qProba, JFrame frame) {
+                            JTextField fireNumber, JTextField probability, JTextField windForce,
+                            JTextField qProba, JFrame frame, Simulation sim) {
         this.c = c;
         this.combobox1 = combobox1;
         this.combobox2 = combobox2;
         this.checkBox1 = checkBox1;
         this.percentageField = percentageField;
-        this.forestNumber = forestNumber;
+        this.fireNumber = fireNumber;
         this.probability = probability;
         this.windForce = windForce;
         this.qProba = qProba;
         this.frame = frame;
+        this.sim = sim;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         boolean proba = checkBox1.isSelected();
-        Integer voisins = (Integer) combobox1.getSelectedItem();
+        ((SimulationForestFire) sim).setProbabiliste(proba);
+
+
+
+        
         String vent = (String) combobox2.getSelectedItem();
+        ((SimulationForestFire) sim).setOrVent(vent);
 
-        String pourcentage = percentageField.getText();
-        try {
-            int pourcentageFeu = Integer.parseInt(pourcentage);
-            if (pourcentageFeu >= 0 && pourcentageFeu <= 100) {
-                // Pourcentage feu valide
-            } else {
-                JOptionPane.showMessageDialog(frame, "Veuillez entrer un entier entre 0 et 100 pour le pourcentage de feu.");
-            }
-        } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(frame, "Veuillez entrer un entier valide pour le pourcentage de feu.");
-        }
 
-        String forest = forestNumber.getText();
+        String fire = fireNumber.getText();
         try {
-            Integer densite = Integer.parseInt(forest);
+            int feu = Integer.parseInt(fire);
+            ((SimulationForestFire) sim).setNbrFeu(feu);
+            ((SimulationForestFire) sim).setFeuAutomate(feu);
+
+            
+
         } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(frame, "Veuillez entrer un entier valide pour la densité de la forêt.");
+            JOptionPane.showMessageDialog(frame, "Veuillez entrer un entier valide pour le nombre du feu.");
         }
+        
+        int voisins = (int) combobox1.getSelectedItem();
+        ((SimulationForestFire) sim).setNbrVoisins(voisins);
+        
+        if (proba) {
 
         String p = probability.getText();
         try {
             double prob = Double.parseDouble(p);
+
             if (prob >= 0 && prob <= 1) {
+                ((SimulationForestFire) sim).setProba(prob);
+
             } else {
                 JOptionPane.showMessageDialog(frame, "Veuillez entrer une valeur entre 0 et 1 pour la probabilité.");
             }
@@ -70,6 +82,14 @@ public class LancerFFListener implements ActionListener {
         String force = windForce.getText();
         try {
             double forceVent = Double.parseDouble(force);
+            
+            if (forceVent >= 0 && forceVent <= 1) {
+                ((SimulationForestFire) sim).setForceVent(forceVent);
+
+            } else {
+                JOptionPane.showMessageDialog(frame, "Veuillez entrer une valeur entre 0 et 1 pour la force du vent.");
+            }
+
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(frame, "Veuillez entrer un nombre valide pour la force du vent.");
         }
@@ -77,13 +97,20 @@ public class LancerFFListener implements ActionListener {
         String q = qProba.getText();
         try {
             double qproba = Double.parseDouble(q);
+            System.out.println(qproba);
+            
             if (qproba >= 0 && qproba <= 1) {
+                ((SimulationForestFire) sim).setQProba(qproba);
+
             } else {
                 JOptionPane.showMessageDialog(frame, "Veuillez entrer une valeur entre 0 et 1 pour la probabilité de Q.");
             }
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(frame, "Veuillez entrer un nombre valide pour la probabilité de Q.");
         }
+        }
+        
+        c.lancer();
         
         
     }

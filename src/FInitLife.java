@@ -40,6 +40,7 @@ public class FInitLife extends JFrame implements FInit{
         
         dg = new DessinGrille(rows, cols, gridWidth, gridHeight, sim.getAutomate());
         dg.setFocusable(true);
+        dg.setHexa(true); //a mettre à true ou false selon le nombre des voisins
         dg.addMouseListener(new ClickIniListener(c));
         add(dg, BorderLayout.CENTER);
 

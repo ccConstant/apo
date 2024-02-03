@@ -6,8 +6,8 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
 public class FInit1D extends JFrame implements FInit {
-    static int HAUTEUR = 600;
-    final static int LARGEUR = 900;
+    static int HAUTEUR = 230;
+    final static int LARGEUR = 640;
 
     static JLabel l1, l2;
     static JTextField ruleField;
@@ -19,6 +19,10 @@ public class FInit1D extends JFrame implements FInit {
     private DessinGrille dg;
     private int gridWidth;
     private int gridHeight;
+    private JFrame frame;
+
+    
+
 
     public FInit1D(Controller c, int cols, int rows) {
         this.c = c;
@@ -63,7 +67,7 @@ public class FInit1D extends JFrame implements FInit {
         gridBtn.setLayout(new GridLayout(1, 2));
 
         JButton lancer = new JButton("Lancer");
-        lancer.addActionListener(e -> generateTableData());
+        //lancer.addActionListener(e -> Lancer1DListener(ruleField, frame));
 
         JButton fermer = new JButton("Quitter");
         fermer.addActionListener(e -> dispose());
@@ -79,9 +83,10 @@ public class FInit1D extends JFrame implements FInit {
         optionsPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         GridBagConstraints gbc = new GridBagConstraints();
+        gbc.anchor = GridBagConstraints.LINE_START; // Align components to the left
+
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.anchor = GridBagConstraints.LINE_START;
         optionsPanel.add(l1, gbc);
 
         gbc.gridx = 1;
@@ -100,15 +105,17 @@ public class FInit1D extends JFrame implements FInit {
         TableColumnModel columnModel = table.getColumnModel();
         columnModel.getColumn(0).setPreferredWidth(400);
 
-        JScrollPane scrollPane = new JScrollPane(table); 
-        scrollPane.setPreferredSize(new Dimension(600, 300)); 
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setPreferredSize(new Dimension(600, 39));
 
         gbc.gridx = 0;
-        gbc.gridy = 1; 
-        gbc.gridwidth = 2;
-        optionsPanel.add(scrollPane, gbc); 
+        gbc.gridy = 1;
+        gbc.gridwidth = 3; // Span all columns
+        optionsPanel.add(scrollPane, gbc);
+
         return optionsPanel;
     }
+
 
     private static void generateTableData() {
         String rule = ruleField.getText();

@@ -11,6 +11,13 @@ public class SimulationForestFire implements Simulation {
 	int nbrIteration ; 
 	String orVent ; 
 	double fv ; 
+	boolean hexa=false;
+	int nbrFeu;
+	int nbrVoisins;
+	double forceVent;
+	private State foret;
+	private State feu;
+	private State vide; 
 	
 	/** 
      * Initialisation de la simulation du feu de forêt 
@@ -27,9 +34,9 @@ public class SimulationForestFire implements Simulation {
      */
 	public void init_simulation(int nbrFeu, int rows, int col, int nbrVoisins, boolean proba, double p, double q, String orVent, double fv) { //mettre le vent
 		State vide=new State("vide", 80, 80, 80, false);
-		State feu=new State("en feu", 80, 8, 8, false);
+		feu=new State("en feu", 80, 8, 8, false);
 		State brule=new State("brûlé", 0,0,0, false);
-		State foret=new State("forêt", 0, 80,0, true);
+		foret=new State("forêt", 0, 80,0, true);
 		ArrayList<State> states=new ArrayList<State>();
 		states.add(vide);
 		states.add(foret);
@@ -46,36 +53,20 @@ public class SimulationForestFire implements Simulation {
 		this.automate=new Automate(2, states, voisins, rows, col); 
 		
 		if (nbrVoisins==6) {
-			//automate.position7Voisins2D();
-			//automate.initCellulesHexa(foret);
+			hexa=true;
+			automate.position7Voisins2D();
+			automate.initCellulesHexa(foret);
 		}else {
-			//automate.initCellules(foret);
+			automate.initCellules(foret);
 			if (nbrVoisins==4) {
 				automate.position5Voisins2D();
 			}else {
 				automate.position9Voisins2D();
 			}
 		}
-		
-		automate.initCellulesHexa(foret);
-		automate.initCellules(foret);
 		this.caseForetDepart=automate.nbrCellulesInState(foret);
-		if (nbrFeu>caseForetDepart) {
-			throw new Error("Le nombre de feu est supérieur au nombre de case Forêt") ; 
-		}
-		boolean find=false;
+		System.out.println(caseForetDepart);
 		
-		for (int i=0 ; i<nbrFeu ; i++) {
-			find=false;
-			while(!find) {
-				int getRandomValue = (int) (Math.random() * (automate.getCellules().size() - 1)) + 1;
-				Cellule c=automate.getCellules().get(getRandomValue) ;
-				if (c.getCurrentState()==foret) {
-					c.setCurrentState(feu);	
-					find=true;
-				}
-			}
-		}
 	}
 	
 	/** 
@@ -83,7 +74,7 @@ public class SimulationForestFire implements Simulation {
      */
 	public void rechargement() {
 		for(Cellule a : automate.getCellules()) {
-			a.rechargementForet(automate, proba, p,q, orVent, fv);
+			a.rechargementForet(automate, proba, p,q, orVent, fv, hexa);
 		}
 		for(Cellule a : automate.getCellules()) {
 			a.setCurrentState(a.getNextState());
@@ -119,5 +110,102 @@ public class SimulationForestFire implements Simulation {
 	public double getNbrIteration() {
 		return nbrIteration;
 	}
-		
+	
+	public void setNbrFeu(int nbrFeu) {
+		this.nbrFeu = nbrFeu; 
+	}
+	
+	public void setNbrVoisins(int nbrVoisins) {
+		this.nbrVoisins = nbrVoisins; 
+		if (nbrVoisins==6) {
+			hexa=true;
+			automate.position7Voisins2D();
+			automate.initCellulesHexa(foret);
+		}else {
+			automate.initCellules(foret);
+			if (nbrVoisins==4) {
+				automate.position5Voisins2D();
+			}else {
+				automate.position9Voisins2D();
+			}
+		}
+	}
+	
+	public void setProbabiliste(boolean proba) {
+		this.proba = proba; 
+	}
+	
+	public void setProba(double p) {
+		this.p = p; 
+	}
+	
+	public void setQProba(double q) {
+		this.q = q; 
+	}
+	
+	public void setOrVent(String orVent) {
+		this.orVent = orVent; 
+	}
+	
+	public void setForceVent(double forceVent) {
+		this.forceVent = forceVent; 
+	}
+	
+	public void setFeuAutomate(int nbrFeu) { 
+	if (nbrFeu>caseForetDepart) {
+		throw new Error("Le nombre de feu est supérieur au nombre de case Forêt") ; 
+	}
+	boolean find=false;
+	
+	for (int i=0 ; i<nbrFeu ; i++) {
+		find=false;
+		while(!find) {
+			int getRandomValue = (int) (Math.random() * (automate.getCellules().size() - 1)) + 1;
+			Cellule c=automate.getCellules().get(getRandomValue) ;
+			if (c.getCurrentState()==foret) {
+				c.setCurrentState(feu);	
+				find=true;
+			}
+		}
+	}}
+	
+	public void setForetAutomate(int percentageField) {
+
+	    int nbrForet = (percentageField * automate.getCellules().size()) / 100;
+	    int nbrVide = automate.getCellules().size() - nbrForet;
+
+	    for (Cellule cell : automate.getCellules()) {
+	        cell.setCurrentState(vide);
+	    }
+
+	    for (int i = 0; i < nbrForet; i++) {
+	        boolean find = false;
+	        while (!find) {
+	            int getRandomValue = (int) (Math.random() * automate.getCellules().size());
+	            Cellule c = automate.getCellules().get(getRandomValue);
+	            if (c.getCurrentState() == vide) {
+	                c.setCurrentState(foret);
+	                find = true;
+	            }
+	        }
+	    }
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

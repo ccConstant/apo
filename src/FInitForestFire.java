@@ -15,7 +15,7 @@ public class FInitForestFire extends JFrame implements FInit {
     static JComboBox<Integer> combobox1;
     static JComboBox<String> combobox2;
     static JCheckBox checkBox1, checkBox2;
-    static JTextField percentageField, forestNumber, probability, windForce, qProba;
+    static JTextField percentageField, fireNumber, probability, windForce, qProba;
     private JFrame frame;
     private Simulation sim;
     private DessinGrille dg;
@@ -30,6 +30,9 @@ public class FInitForestFire extends JFrame implements FInit {
         this.gridWidth = 400; 
         this.gridHeight = 400; 
         
+        sim = new SimulationForestFire();
+        ((SimulationForestFire) sim).init_simulation(0, rows, cols, 0, false, 0, 0, "", 0);
+        
         
         setTitle("Paramètres: Automate feu de forêt");
         setSize(LARGEUR, HAUTEUR);
@@ -39,6 +42,8 @@ public class FInitForestFire extends JFrame implements FInit {
         Integer s[] = {4, 6, 8};
         combobox1 = new JComboBox<>(s);
         combobox1.setPreferredSize(new Dimension(100, 20));
+
+        
 
         String v[] = {"Aucun", "Nord", "Sud", "Est", "Ouest"};
         combobox2 = new JComboBox<>(v);
@@ -90,14 +95,21 @@ public class FInitForestFire extends JFrame implements FInit {
                 checkBox1.setSelected(false);
             }
         });
-        
-        sim = new SimulationForestFire();
-        ((SimulationForestFire) sim).init_simulation(0, rows, cols, 0, false, 0, 0, "", 0);
+       
         
         
         dg = new DessinGrille(rows, cols, gridWidth, gridHeight, sim.getAutomate());
         dg.setFocusable(true);
         dg.addMouseListener(new ClickIniListener(c));
+        combobox1.addItemListener(e -> {
+            if (combobox1.getSelectedItem().toString().equals("6")) {
+            	dg.setHexa(true);
+                c.setHexa(true);
+            }else { 
+                dg.setHexa(false);
+                c.setHexa(false);
+            }
+            });
         mainPanel.add(dg, BorderLayout.CENTER); 
         setVisible(true);
 
@@ -109,7 +121,7 @@ public class FInitForestFire extends JFrame implements FInit {
 
         JButton lancer = new JButton("Lancer");
         lancer.addActionListener(new LancerFFListener(c, combobox1, combobox2, checkBox1, 
-                percentageField, forestNumber, probability, windForce, qProba, frame));
+                percentageField, fireNumber, probability, windForce, qProba, frame, sim));
 
         
         
@@ -147,6 +159,8 @@ public class FInitForestFire extends JFrame implements FInit {
         gbc.gridx = 1;
         gbc.gridy = 1;
         percentageField = new JTextField(10); 
+        percentageField.setText("0");
+
         optionsPanel.add(percentageField, gbc);
 
         gbc.gridx = 2;
@@ -157,9 +171,7 @@ public class FInitForestFire extends JFrame implements FInit {
         gbc.gridy = 1;
         JButton genererPourc = new JButton("Générer");
         optionsPanel.add(genererPourc, gbc);
-       //genererPourc.addActionListener(new GenererFFListener(c, ));
-
-        
+       genererPourc.addActionListener(new GenererFFListener(percentageField, frame));
 
         gbc.gridx = 0;
         gbc.gridy = 2;
@@ -167,8 +179,10 @@ public class FInitForestFire extends JFrame implements FInit {
 
         gbc.gridx = 1;
         gbc.gridy = 2;
-        forestNumber = new JTextField(10); 
-        optionsPanel.add(forestNumber, gbc);
+        fireNumber = new JTextField(10); 
+        fireNumber.setText("0");
+
+        optionsPanel.add(fireNumber, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 3;
@@ -189,6 +203,7 @@ public class FInitForestFire extends JFrame implements FInit {
         gbc.gridx = 1;
         gbc.gridy = 4;
         probability = new JTextField(10); 
+        probability.setText("0");
         optionsPanel.add(probability, gbc);
 
         gbc.gridx = 0;
@@ -206,6 +221,7 @@ public class FInitForestFire extends JFrame implements FInit {
         gbc.gridx = 1;
         gbc.gridy = 6;
         windForce = new JTextField(10); 
+        windForce.setText("0");
         optionsPanel.add(windForce, gbc); 
 
         gbc.gridx = 0;
@@ -215,6 +231,8 @@ public class FInitForestFire extends JFrame implements FInit {
         gbc.gridx = 1;
         gbc.gridy = 7;
         qProba = new JTextField(10); 
+        qProba.setText("0");
+
         optionsPanel.add(qProba, gbc);
 
         checkBox2.addItemListener(e -> {
@@ -231,24 +249,24 @@ public class FInitForestFire extends JFrame implements FInit {
 	@Override
 	public DessinGrille getDessin() {
 		// TODO Auto-generated method stub
-		return null;
+		return dg;
 	}
 
 	@Override
 	public Simulation getSimu() {
 		// TODO Auto-generated method stub
-		return null;
+		return sim;
 	}
 
 	@Override
 	public int getRows() {
 		// TODO Auto-generated method stub
-		return 0;
+		return rows;
 	}
 
 	@Override
 	public int getCols() {
 		// TODO Auto-generated method stub
-		return 0;
+		return cols;
 	}
 }
