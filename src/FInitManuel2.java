@@ -45,7 +45,7 @@ public class FInitManuel2 extends JFrame implements FInit{
         State def = arrayList.get(0);
         
         for(State state : arrayList) {
-        	if(state.getDefault()) {
+        	if(state.getByDefault()) {
         		def = state;
         	}
         }
