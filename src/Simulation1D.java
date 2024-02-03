@@ -21,7 +21,7 @@ public class Simulation1D implements Simulation {
     }
 
     public void rechargement() {
-    automate.updateCells(regle);  
+    automate.updateCells1D(regle);  
     
     for (Cellule cell : automate.getCellules()) {
         cell.setCurrentState(cell.getNextState());

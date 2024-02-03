@@ -424,7 +424,7 @@ public class Automate {
 		}
 	}
 
-  //1D
+  //1D debut 
   /**
      * Méthode pour obtenir les trois voisins d'une cellule en 1D
      * @param c cellule pour laquelle on veut obtenir les voisins
@@ -448,17 +448,18 @@ public class Automate {
       return neighbours;
     }
       // méthode pour mettre à jour les cellules selon la règle spécifiée
-    public void updateCells(int rule) {
+    public void updateCells1D(int rule) {
       for (Cellule cell : cellules) {
-          cell.updateCell(this, rule);
+          cell.rechargement1D(this, rule);
       }
     }
 
-  //1D    
+  //1D fin   
 
 
+  //Majority debut
 
-      public void updateCellMajority(Cellule cell) {
+      public void rechargementMajority(Cellule cell) {
         ArrayList<Cellule> neighbours = getNeighbours(cell);
         int[] countStates = new int[states.size()];
 
@@ -474,55 +475,63 @@ public class Automate {
         cell.setNextState(states.get(majorityState));
       }
 
-            
-
       public ArrayList<Cellule> getNeighbours(Cellule cell) {
         if (d == 1) {
             return getNeighbours1D(cell);
         } else if (d == 2) {
             return getNeighbours2D(cell);
         } else {
-            // Gérer d'autres dimensions si nécessaire
             return new ArrayList<>();
         }
-    }
+      }
 
-    private ArrayList<Cellule> getNeighbours1D(Cellule cell) {
-      int[] position = cell.getPosition();
-      ArrayList<Cellule> neighbours = new ArrayList<>();
+      private ArrayList<Cellule> getNeighbours1D(Cellule cell) {
+        int[] position = cell.getPosition();
+        ArrayList<Cellule> neighbours = new ArrayList<>();
 
-      // Voisin de gauche
-      int leftX = (position[0] - 1 + largeur) % largeur;
-      neighbours.add(getCelluleFromPosition(leftX, position[1], false));
+        // Voisin de gauche
+        int leftX = (position[0] - 1 + largeur) % largeur;
+        neighbours.add(getCelluleFromPosition(leftX, position[1], false));
 
-      // Voisin de droite
-      int rightX = (position[0] + 1) % largeur;
-      neighbours.add(getCelluleFromPosition(rightX, position[1], false));
+        // La cellule elle-même
+        neighbours.add(cell);
 
-      // La cellule elle-même
-      neighbours.add(cell);
+        // Voisin de droite
+        int rightX = (position[0] + 1) % largeur;
+        neighbours.add(getCelluleFromPosition(rightX, position[1], false));
 
-      return neighbours;
-  }
+        return neighbours;
+      }
 
-    private ArrayList<Cellule> getNeighbours2D(Cellule cell) {
-    int[] position = cell.getPosition();
-    ArrayList<Cellule> neighbours = new ArrayList<>();
-
-    // Ajouter les voisins pour la dimension 2
-    for (int i = -1; i <= 1; i++) {
-        for (int j = -1; j <= 1; j++) {
-            int x = (position[0] + i + largeur) % largeur;
-            int y = (position[1] + j + longueur) % longueur;
-            neighbours.add(getCelluleFromPosition(x, y, false));
+      private ArrayList<Cellule> getNeighbours2D(Cellule cell) {
+        int[] position = cell.getPosition();
+        ArrayList<Cellule> neighbours = new ArrayList<>();
+    
+        // Ajouter les voisins pour la dimension 2
+        for (int i = -1; i <= 1; i++) {
+            for (int j = -1; j <= 1; j++) {
+                int x = (position[0] + i + largeur) % largeur;
+                int y = (position[1] + j + longueur) % longueur;
+                Cellule neighbourCell = getCelluleFromPosition(x, y, false);
+                neighbours.add(neighbourCell);
+            }
         }
+    
+        // La cellule elle-même
+        neighbours.add(cell);
+    
+        // Vérifier et remplir les voisins absents avec l'état par défaut (0)
+        for (int i = neighbours.size(); i < 9; i++) {
+            neighbours.add(getDefaultCell());
+        }
+    
+        return neighbours;
     }
 
-    // La cellule elle-même
-    neighbours.add(cell);
-
-    return neighbours;
-}
+    // Ajoutez cette méthode pour obtenir une cellule par défaut avec l'état 0
+    private Cellule getDefaultCell() {
+        return new Cellule(states.get(0), new int[]{0, 0}); 
+    }
 
       private int findMajorityState(int[] countStates) {
         int majorityState = 0;
@@ -544,7 +553,9 @@ public class Automate {
 
       public void updateCellsMajority() {
         for (Cellule cell : cellules) {
-            cell.updateCellMajority(this);
+            cell.rechargementMajority(this);
         }
       }
+
+  // Majority fin    
 }

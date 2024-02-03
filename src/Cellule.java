@@ -312,8 +312,8 @@ public class Cellule{
     			
     	}
     }
-	//1D
-	public void updateCell(Automate automate, int rule) {
+	//1D debut 
+	public void rechargement1D(Automate automate, int rule) {
         // Convertir le numéro de règle en binaire et remplir le dictionnaire de règles
         Map<String, Integer> ruleMap = generateRuleMap(rule);
 
@@ -342,11 +342,12 @@ public class Cellule{
 
         return ruleMap;
     }
-	//1D
+	//1D fin 
 
-
-	public void updateCellMajority(Automate automate) {
-		automate.updateCellMajority(this);
+	//Majority
+	public void rechargementMajority(Automate automate) {
+		automate.rechargementMajority(this);
 	}
+	//Majority
 
 }
