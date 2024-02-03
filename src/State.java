@@ -63,4 +63,8 @@ public class State{
     public int getB() {
     	return b;
     }
+    
+    public boolean getDefault() {
+    	return byDefault;
+    }
 }

@@ -77,10 +77,12 @@ public class Controller {
 	
 	public void changeStateClick(int xClick, int yClick) {
 		Automate auto;
-		if(!(fi instanceof FInitManuel1)) {
+		if((!(fi instanceof FInitManuel1)) && (!(fi instanceof FInitManuel2))) {
 			auto = fi.getSimu().getAutomate();
-		} else {
+		} else if(fi instanceof FInitManuel1) {
 			auto = ((FInitManuel1)fi).getAuto();
+		} else {
+			auto = ((FInitManuel2)fi).getAuto();
 		}
 		
 		int size = fi.getDessin().getCellSize();
@@ -90,7 +92,15 @@ public class Controller {
 			ArrayList<State> states = auto.getStates();
 			Cellule target = auto.getCelluleFromPosition(x, y, hexa);
 			State next = states.get((states.indexOf(target.getCurrentState())+1)%states.size());
-			target.setCurrentState(next);
+			System.out.println(next.getR());
+			if(next.getR() == -1) {
+				next = states.get((states.indexOf(target.getCurrentState())+2)%states.size());
+				System.out.println(next);
+			}
+			if(target.getCurrentState().getR() != -1) {
+				target.setCurrentState(next);
+			}
+			
 			fi.getDessin().repaint();
 		}
 	}
@@ -109,9 +119,10 @@ public class Controller {
 		hexa = b;
 	}
 
-	public void nextManuel() {
-		
-		
+	public void nextManuel(int[][] voisins, ArrayList<State> arrayList) {
+		fi.setVisible(false);
+		fi = new FInitManuel2(this,fa.getValX(), fa.getValY() , voisins, arrayList);
+		fi.setVisible(true);
 	}
 	
 	
