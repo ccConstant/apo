@@ -105,6 +105,26 @@ public class Automate {
 			}
 		}
     }
+
+    /** 
+     * Initialise l'état de toutes cellules de l'automate à l'état passé en paramètre
+     * @param s état que l'on veut attribuer à toutes les cellules de l'automate 
+     */
+    public void initCellules3D(State s) {
+      for (int k=0 ; k<z ; k++){
+        for (int i=0 ; i<longueur; i++) {
+          for (int j=0; j<largeur; j++) {
+            int position[]=new int[2];
+            position[0]=j;
+            position[1]=i;	
+            position[2]=k ; 
+            Cellule c=new Cellule(s, position);
+            cellules.add(c);
+            
+          }
+        }
+      }
+    }
     
     
     
