@@ -37,7 +37,7 @@ public class FInitMajorityRule extends JFrame implements FInit{
         setLocationRelativeTo(c.getAccueil());
         
         sim = new SimulationMajority();
-        ((SimulationMajority)sim).init_simulation(rows, cols);
+        ((SimulationMajority)sim).init_simulation(rows, cols, 2);
 
         elementFenetre();
 

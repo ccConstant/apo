@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 public class Cellule{
@@ -311,31 +312,56 @@ public class Cellule{
     			
     	}
     }
-
-	public void updateCell(Automate automate, int rule) {
-		int[] voisinsStates = new int[3];
-		ArrayList<Cellule> neighbours = automate.getThreeNeighbours(this);
 	
-		for (int i = 0; i < 3; i++) {
-			voisinsStates[i] = Integer.parseInt(neighbours.get(i).getCurrentState().getState());
-		}
-	
-		// Calcul de la valeur binaire
-		int binaryValue = voisinsStates[0] * 4 + voisinsStates[1] * 2 + voisinsStates[2];
-	
-		// Utilisation du bit correspondant de la règle (en prenant en compte l'ordre 111, 110, 101, 100, 011, 010, 001, 000)
-		int bit = (rule & (1 << (7 - binaryValue))) >> (7 - binaryValue);
-	
-		// Utilisation de l'opérateur modulo pour assurer que la valeur reste dans les limites
-		int newValue = (voisinsStates[1] + bit + automate.getStates().size()) % automate.getStates().size();
-	
-		setNextState(automate.getStates().get(newValue));
-	}
+	/**
+     * Effectue une mise à jour de l'état de la cellule en fonction de la règle 1D spécifiée.
+     *
+     * @param automate L'automate cellulaire auquel appartient la cellule.
+     * @param rule Le numéro de la règle 1D utilisé pour la mise à jour.
+     */
+    public void rechargement1D(Automate automate, int rule) {
+        // Convertit le numéro de règle en binaire et remplit le dictionnaire de règles
+        Map<String, Integer> ruleMap = generateRuleMap(rule);
 
+        // Obtient les états des voisins
+        ArrayList<Cellule> neighbours = automate.getThreeNeighbours(this);
+        StringBuilder binaryConfig = new StringBuilder();
 
+        for (int i = 0; i < 3; i++) {
+            binaryConfig.append(neighbours.get(i).getCurrentState().getState());
+        }
 
+        // Utilise le dictionnaire de règles pour obtenir le nouvel état
+        int newValue = ruleMap.get(binaryConfig.toString());
 
-	public void updateCellMajority(Automate automate) {
-		automate.updateCellMajority(this);
-	}
+        // Met à jour l'état suivant de la cellule
+        setNextState(automate.getStates().get(newValue));
+    }
+
+    /**
+     * Génère un dictionnaire de règles à partir du numéro de règle binaire spécifié.
+     *
+     * @param ruleNumber Le numéro de règle binaire à utiliser.
+     * @return Un dictionnaire de règles associant des configurations binaires à de nouveaux états.
+     */
+    private Map<String, Integer> generateRuleMap(int ruleNumber) {
+        Map<String, Integer> ruleMap = new HashMap<>();
+        String binaryRule = String.format("%8s", Integer.toBinaryString(ruleNumber)).replace(' ', '0');
+
+        for (int i = 0; i < 8; i++) {
+            String binaryConfig = String.format("%3s", Integer.toBinaryString(i)).replace(' ', '0');
+            ruleMap.put(binaryConfig, binaryRule.charAt(7 - i) - '0');
+        }
+
+        return ruleMap;
+    }
+	/**
+     * Effectue une mise à jour de l'état de la cellule en fonction de la règle de majorité.
+     *
+     * @param automate L'automate cellulaire auquel appartient la cellule.
+     */
+    public void rechargementMajority(Automate automate) {
+        automate.rechargementMajority(this);
+    }
+
 }

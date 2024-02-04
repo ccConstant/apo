@@ -1,171 +1,145 @@
 import java.awt.Component;
 import java.util.ArrayList;
+import java.util.Map;
 
 import javax.swing.JButton;
 
-/**
- * Le contrôleur de l'application, responsable de la coordination entre les différents composants.
- */
 public class Controller {
 
-    private FenetreAccueil fa;
-    private FGrille fg;
-    private FInit fi;
-    private ReloadTimer rt;
-    private boolean hexa;
+	private FenetreAccueil fa;
+	private FGrille fg;
+	private FInit fi;
+	
+	private ReloadTimer rt;
+	private boolean hexa;
+	private int x;
+	private int y;
+	private int z;
+	
+	public Controller() {
+		fa = new FenetreAccueil(this);
+		hexa = false;
+		
+	}
 
-    /**
-     * Constructeur par défaut de la classe Controller.
-     */
-    public Controller() {
-        fa = new FenetreAccueil(this);
-        hexa = false;
-    }
+	public void afficherAccueil() {
+		fa.setVisible(true);
+		fa.setLocation(600,250);
+		fa.setAlwaysOnTop(true);
+	}
 
-    /**
-     * Affiche la fenêtre d'accueil.
-     */
-    public void afficherAccueil() {
-        fa.setVisible(true);
-        fa.setLocation(600, 250);
-        fa.setAlwaysOnTop(true);
-    }
+	public void quitter() {
+		fa.dispose();
+	}
 
-    /**
-     * Ferme la fenêtre d'accueil.
-     */
-    public void quitter() {
-        fa.dispose();
-    }
+	public Component getAccueil() {
+		return fa;
+	}
+	
+	public void generer(String type) {
+		fa.setVisible(false);
+		if (type.equals("Manuel")) {
+			switch(fa.getDim()) {
+	        case 1 : x = fa.getValX(); y=1; z=1;break;
+	        case 2 :  x = fa.getValX(); y=fa.getValY(); z=1;break;
+	        case 3 :  x = fa.getValX(); y=fa.getValY(); z=fa.getValZ();break;
+	        }
+		} else {
+			x = fa.getValX();
+			y = fa.getValY();
+			z = fa.getValZ();
+		}
+		
 
-    /**
-     * Renvoie le composant de la fenêtre d'accueil.
-     *
-     * @return Le composant de la fenêtre d'accueil.
-     */
-    public Component getAccueil() {
-        return fa;
-    }
+		
+		switch(type) {
+		case "Jeu de la vie" : fi = new FInitLife(this, x, y);break;
+		case "Feu de forêt" : fi = new FInitForestFire(this, x, y, 0);break;
+		case "Règle de majorité" : fi = new FInitMajorityRule(this, x, y);break;
+		case "1D" : fi = new FInit1D(this, x, 1);break;
+		case "Manuel" : fi = new FInitManuel1(this, x, y, z, fa.getDim());break;
+		}
+		
+		
+		int tps = fa.getTps();
+		int ite = fa.getIte();
+		rt = new ReloadTimer(tps, ite, this);	
+	}
+	
 
-    /**
-     * Génère une nouvelle simulation en fonction du type sélectionné.
-     *
-     * @param type Le type de simulation à générer.
-     */
-    public void generer(String type) {
-        fa.setVisible(false);
-        int x = fa.getValX();
-        int y = fa.getValY();
-        int z = fa.getValZ();
+	public void reload() {
+		fg.getSimu().rechargement();
+		fg.getDessin().repaint();
+		
+	}
+	
+	public void pause(JButton ps) {
+		if(rt.getPaused()) {
+			rt.resumeReload();
+			ps.setText("Pause");
+		}else {
+			rt.pauseReload();
+			ps.setText("Reprendre");
+		}
+	}
+	
+	public void parametre() {
+		
+	}
+	
+	public void changeStateClick(int xClick, int yClick) {
+		Automate auto;
+		if((!(fi instanceof FInitManuel1)) && (!(fi instanceof FInitManuel2))) {
+			auto = fi.getSimu().getAutomate();
+		} else if(fi instanceof FInitManuel1) {
+			auto = ((FInitManuel1)fi).getAuto();
+		} else {
+			auto = ((FInitManuel2)fi).getAuto();
+		}
+		
+		int size = fi.getDessin().getCellSize();
+		int x = (xClick-10)/size;
+		int y = (yClick-10)/size;
+		if (x < fi.getCols() && y < fi.getRows()) {
+			ArrayList<State> states = auto.getStates();
+			Cellule target = auto.getCelluleFromPosition(x, y, hexa);
+			State next = states.get((states.indexOf(target.getCurrentState())+1)%states.size());
+			System.out.println(next.getR());
+			if(next.getR() == -1) {
+				next = states.get((states.indexOf(target.getCurrentState())+2)%states.size());
+				System.out.println(next);
+			}
+			if(target.getCurrentState().getR() != -1) {
+				target.setCurrentState(next);
+			}
+			
+			fi.getDessin().repaint();
+		}
+	}
 
-        switch (type) {
-            case "Jeu de la vie":
-                fi = new FInitLife(this, x, y);
-                break;
-            case "Feu de forêt":
-                fi = new FInitForestFire(this, x, y, 0);
-                break;
-            case "Règle de majorité":
-                fi = new FInitMajorityRule(this, x, y);
-                break;
-            case "1D":
-                fi = new FInit1D(this, x, 1);
-                break;
-            case "Manuel":
-                fi = new FInitManuel1(this, x, y);
-                break;
-        }
+	public void lancer() {
+		fi.setVisible(false);
+		fg = new FGrille(this, x, y, fi.getSimu());
+		rt.startReload();
+		
+	}
+	
+	public void setHexa(boolean b) {
+		hexa = b;
+	}
 
-        int tps = fa.getTps();
-        int ite = fa.getIte();
-        rt = new ReloadTimer(tps, ite, this);
-    }
+	public void nextManuel(int[][] voisins, ArrayList<State> arrayList) {
+		fi.setVisible(false);
+		fi = new FInitManuel2(this,x, y , voisins, arrayList, z, fa.getDim());
+		fi.setVisible(true);
+	}
+	
+	public void initManuel(int[][] voisins, ArrayList<State> arrayList, Map<String, State> regle) {
+		fi.setVisible(false);
+		fi = new FInitManuel3(this,x, y , voisins, arrayList, regle, z, fa.getDim());
+		fi.setVisible(true);
+	}
+	
+	
 
-    /**
-     * Recharge la simulation en cours.
-     */
-    public void reload() {
-        fg.getSimu().rechargement();
-        fg.getDessin().repaint();
-    }
-
-    /**
-     * Met en pause ou reprend le rechargement automatique de la simulation.
-     *
-     * @param ps Le bouton de pause/reprise.
-     */
-    public void pause(JButton ps) {
-        if (rt.getPaused()) {
-            rt.resumeReload();
-            ps.setText("Pause");
-        } else {
-            rt.pauseReload();
-            ps.setText("Reprendre");
-        }
-    }
-
-    /**
-     * Ouvre la fenêtre de paramétrage.
-     */
-    public void parametre() {
-        // À implémenter
-    }
-
-    /**
-     * Change l'état d'une cellule suite à un clic de souris.
-     *
-     * @param xClick L'abscisse du clic.
-     * @param yClick L'ordonnée du clic.
-     */
-    public void changeStateClick(int xClick, int yClick) {
-        Automate auto;
-        if (!(fi instanceof FInitManuel1)) {
-            auto = fi.getSimu().getAutomate();
-        } else {
-            auto = ((FInitManuel1) fi).getAuto();
-        }
-
-        int size = fi.getDessin().getCellSize();
-        int x = (xClick - 10) / size;
-        int y = (yClick - 10) / size;
-        if (x < fi.getCols() && y < fi.getRows()) {
-            ArrayList<State> states = auto.getStates();
-            Cellule target = auto.getCelluleFromPosition(x, y, hexa);
-            State next = states.get((states.indexOf(target.getCurrentState()) + 1) % states.size());
-            target.setCurrentState(next);
-            fi.getDessin().repaint();
-        }
-    }
-
-    /**
-     * Lance la simulation.
-     */
-    public void lancer() {
-    	
-        fi.setVisible(false);
-        int x = fa.getValX();
-        int y = fa.getValY();
-        int z = fa.getValZ();
-        fg = new FGrille(this, x, y, fi.getSimu());
-        rt.startReload();
-    }
-
-    
-    
-
-    /**
-     * Définit le mode hexagonal pour la simulation.
-     *
-     * @param b true pour activer le mode hexagonal, false sinon.
-     */
-    public void setHexa(boolean b) {
-        hexa = b;
-    }
-
-    /**
-     * Passe à l'étape suivante pour une simulation manuelle.
-     */
-    public void nextManuel() {
-        // À implémenter
-    }
 }

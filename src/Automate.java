@@ -1,5 +1,4 @@
-import java.util.ArrayList;
-import java.util.Random;
+import java.util.*;
 
 
 public class Automate {
@@ -7,10 +6,10 @@ public class Automate {
     ArrayList<State> states= new ArrayList<State>() ;
     int voisins[][]; // doit être de taille [nombreVoisins][d]
     ArrayList<Cellule> cellules = new ArrayList<Cellule>() ;
-    int longueur=0;
-    int largeur=0;
+    int longueur=1;
+    int largeur=1;
     int nombreVoisins=0;
-    int z=0; 
+    int z=1; 
     
     /** 
      * Constructeur
@@ -20,7 +19,7 @@ public class Automate {
      * @param largeur de la grille
      */
     public Automate(int d, ArrayList<State> states, int voisins[][], int largeur) {
-        this.d = 0; 
+        this.d = d; 
         this.states = states;
         this.voisins = voisins; 
         this.largeur=largeur;
@@ -35,7 +34,7 @@ public class Automate {
      * @param largeur de la grille
      */
     public Automate(int d, ArrayList<State> states, int voisins[][], int longueur, int largeur) {
-        this.d = 0; 
+        this.d = d; 
         this.states = states;
         this.voisins = voisins; 
         this.longueur=longueur;
@@ -52,7 +51,7 @@ public class Automate {
      * @param z de la grille
      */
     public Automate(int d, ArrayList<State> states, int voisins[][], int longueur, int largeur, int z) {
-        this.d = 0; 
+        this.d = d; 
         this.states = states;
         this.voisins = voisins; 
         this.longueur=longueur;
@@ -403,7 +402,7 @@ public class Automate {
      * Initialise l'état de toutes cellules en mode hexagone de l'automate à l'état passé en paramètre
      * @param s état que l'on veut attribuer à toutes les cellules de l'automate 
      */
-	public void initCellulesHexa(State s) {
+	  public void initCellulesHexa(State s) {
 		for (int i=0 ; i<longueur; i++) {
 			if (i%2==1) {
 				for (int j=1; j<2*largeur; j+=2) {
@@ -423,15 +422,14 @@ public class Automate {
 				}
 			}
 		}
-	}
-
-
-
+	  }
 
     /**
-     * Méthode pour obtenir les trois voisins d'une cellule en 1D
-     * @param c cellule pour laquelle on veut obtenir les voisins
-     * @return ArrayList<Cellule> liste de trois voisins (gauche, droite et cellule elle-même)
+     * Obtient les trois voisins d'une cellule en 1D.
+     * Les cellules de bord cherchent de l'autre côté de la grille .
+     *
+     * @param c La cellule pour laquelle on veut obtenir les voisins.
+     * @return ArrayList<Cellule> Liste de trois voisins (gauche, cellule elle-même , droite).
      */
     public ArrayList<Cellule> getThreeNeighbours(Cellule c) {
       int[] position = c.getPosition();
@@ -441,82 +439,156 @@ public class Automate {
       int leftX = (position[0] - 1 + largeur) % largeur;
       neighbours.add(getCelluleFromPosition(leftX, position[1], false));
 
+      // La cellule elle-même
+      neighbours.add(c);
+
       // Voisin de droite
       int rightX = (position[0] + 1) % largeur;
       neighbours.add(getCelluleFromPosition(rightX, position[1], false));
 
+      return neighbours;
+    }
+
+    /**
+     * Met à jour toutes les cellules de l'automate en 1D en fonction de la règle spécifiée.
+     *
+     * @param rule La règle à appliquer pour la mise à jour des cellules.
+     */
+    public void updateCells1D(int rule) {
+        for (Cellule cell : cellules) {
+            cell.rechargement1D(this, rule);
+        }
+    }
+
+    /**
+    * Met à jour toutes les cellules de l'automate en utilisant la règle de la majorité.
+    */
+    public void updateCellsMajority() {
+      for (Cellule cell : cellules) {
+          cell.rechargementMajority(this);
+      }
+    }
+
+    /**
+     * Méthode de mise à jour d'une cellule selon la règle de la majorité.
+     *
+     * @param cell La cellule à mettre à jour.
+     */
+    public void rechargementMajority(Cellule cell) {
+        ArrayList<Cellule> neighbours = getNeighbours(cell);
+        int[] countStates = new int[states.size()];
+
+        // Compter le nombre d'occurrences de chaque état parmi les voisins
+        for (Cellule neighbour : neighbours) {
+            countStates[getStateIndex(neighbour.getCurrentState())]++;
+        }
+
+        // Trouver l'état majoritaire
+        int majorityState = findMajorityState(countStates);
+
+        // Mettre à jour l'état de la cellule
+        cell.setNextState(states.get(majorityState));
+    }
+
+    /**
+     * Obtient les voisins d'une cellule en fonction de la dimension de l'automate.
+     *
+     * @param cell La cellule pour laquelle on veut obtenir les voisins.
+     * @return ArrayList<Cellule> Liste des voisins de la cellule.
+     */
+    public ArrayList<Cellule> getNeighbours(Cellule cell) {
+        if (d == 1) {
+            return getNeighbours1D(cell);
+        } else if (d == 2) {
+            return getNeighbours2D(cell);
+        } else {
+            return new ArrayList<>();
+        }
+    }
+
+     /**
+     * Méthode pour obtenir les voisins d'une cellule en 1D.
+     * Les cellules de bord cherchent de l'autre côté de la grille .
+     * @param cell La cellule pour laquelle on veut obtenir les voisins.
+     * @return ArrayList<Cellule> Liste des voisins (gauche, cellule elle-même et droite).
+     */
+    private ArrayList<Cellule> getNeighbours1D(Cellule cell) {
+      int[] position = cell.getPosition();
+      ArrayList<Cellule> neighbours = new ArrayList<>();
+
+      // Voisin de gauche
+      int leftX = (position[0] - 1 + largeur) % largeur;
+      neighbours.add(getCelluleFromPosition(leftX, position[1], false));
+
       // La cellule elle-même
-      neighbours.add(c);
+      neighbours.add(cell);
+
+      // Voisin de droite
+      int rightX = (position[0] + 1) % largeur;
+      neighbours.add(getCelluleFromPosition(rightX, position[1], false));
 
       return neighbours;
     }
 
 
-      // méthode pour mettre à jour les cellules selon la règle spécifiée
-    public void updateCells(int rule) {
-      for (Cellule cell : cellules) {
-          cell.updateCell(this, rule);
+    /**
+     * Méthode pour obtenir les voisins d'une cellule en 2D.
+     * Les cellules de bord cherchent de l'autre côté de la grille comme si elle formait une sphère (ou cylindre).
+     * 
+     * @param cell La cellule pour laquelle on veut obtenir les voisins.
+     * @return ArrayList<Cellule> Liste des voisins (8 voisins autour de la cellule plus la cellule elle-même).
+     */
+    private ArrayList<Cellule> getNeighbours2D(Cellule cell) {
+      int[] position = cell.getPosition();
+      ArrayList<Cellule> neighbours = new ArrayList<>();
+
+      // Ajouter les voisins pour la dimension 2
+      for (int i = -1; i <= 1; i++) {
+          for (int j = -1; j <= 1; j++) {
+              int x = (position[0] + i + largeur) % largeur;
+              int y = (position[1] + j + longueur) % longueur;
+              Cellule neighbourCell = getCelluleFromPosition(x, y, false);
+              neighbours.add(neighbourCell);
+          }
       }
+
+      // La cellule elle-même
+      neighbours.add(cell);
+
+      
+      return neighbours;
     }
 
-    public void updateCellMajority(Cellule cell) {
-      ArrayList<Cellule> neighbours = getNeighbours(cell);
-      int[] countStates = new int[states.size()];
 
-      // Compter le nombre d'occurrences de chaque état parmi les voisins
-      for (Cellule neighbour : neighbours) {
-          countStates[getStateIndex(neighbour.getCurrentState())]++;
+     /**
+     * Trouve l'état majoritaire parmi les états des voisins.
+     *
+     * @param countStates Tableau représentant le nombre d'occurrences de chaque état parmi les voisins.
+     * @return int L'index de l'état majoritaire dans la liste des états.
+     */
+    private int findMajorityState(int[] countStates) {
+      int majorityState = 0;
+      int maxCount = 0;
+
+      for (int i = 0; i < countStates.length; i++) {
+          if (countStates[i] > maxCount) {
+              maxCount = countStates[i];
+              majorityState = i;
+          }
       }
 
-      // Trouver l'état majoritaire
-      int majorityState = findMajorityState(countStates);
-
-      // Mettre à jour l'état de la cellule
-      cell.setNextState(states.get(majorityState));
-
+      return majorityState;
     }
 
-      // Méthode pour trouver l'index de l'état majoritaire
-      private int findMajorityState(int[] countStates) {
-        int majorityState = 0;
-        int maxCount = 0;
+    /**
+     * Obtient l'index d'un état dans la liste des états.
+     *
+     * @param state L'état dont on veut obtenir l'index.
+     * @return int L'index de l'état.
+     */
+    public int getStateIndex(State state) {
+      return states.indexOf(state);
+    }
 
-        for (int i = 0; i < countStates.length; i++) {
-            if (countStates[i] > maxCount) {
-                maxCount = countStates[i];
-                majorityState = i;
-            }
-        }
-
-        return majorityState;
-      }
-
-      public ArrayList<Cellule> getNeighbours(Cellule cell) {
-        int[] position = cell.getPosition();
-        ArrayList<Cellule> neighbours = new ArrayList<>();
-
-        // Voisin de gauche
-        int leftX = (position[0] - 1 + largeur) % largeur;
-        neighbours.add(getCelluleFromPosition(leftX, position[1], false));
-
-        // Voisin de droite
-        int rightX = (position[0] + 1) % largeur;
-        neighbours.add(getCelluleFromPosition(rightX, position[1], false));
-
-        // La cellule elle-même
-        neighbours.add(cell);
-
-        return neighbours;
-      }
-
-      public int getStateIndex(State state) {
-        return states.indexOf(state);
-      }
-
-      public void updateCellsMajority() {
-        for (Cellule cell : cellules) {
-            cell.updateCellMajority(this);
-        }
-      }
-
+      
 }

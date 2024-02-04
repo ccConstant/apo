@@ -192,28 +192,6 @@ public class SimulationForestFire implements Simulation {
    
     
     public void setPourcentage(int pourcentage) {
-    	this.pourcentage=pourcentage;}
-    	/*
-
-    	this.pourcentage = pourcentage;
-    	if (this.pourcentage > 0) {
-            int nbrForet = (this.pourcentage * automate.getCellules().size()) / 100;
-
-            for (Cellule cell : automate.getCellules()) {
-                cell.setCurrentState(vide);
-            }
-
-            for (int i = 0; i < nbrForet; i++) {
-                boolean find = false;
-                while (!find) {
-                    int getRandomValue = (int) (Math.random() * automate.getCellules().size());
-                    Cellule c = automate.getCellules().get(getRandomValue);
-                    if (c.getCurrentState() == vide) {
-                        c.setCurrentState(foret);
-                        find = true;
-                    }
-                }
-            }
-        }
-    }*/
+    	this.pourcentage=pourcentage;
+    	}
 }
