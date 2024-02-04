@@ -62,8 +62,6 @@ public class DessinGrille extends JPanel {
                 for (int j = 0; j < rows; j++) {
                 	int x = startX + j * cellSize;
                     int y = startY + i * cellSize;
-                    System.out.print(j);
-                    System.out.println(" " + i);
                 	Cellule c = a.getCelluleFromPosition(j, i, z, hexa);
                     State s = c.getCurrentState();
                     if(s.getR() != -1) {
@@ -88,8 +86,8 @@ public class DessinGrille extends JPanel {
             }
         	
         	// Dessiner les hexagones dans la grille
-        	for (int i = 0; i < rows; i++) {
-    		    for (int j = 0; j < cols; j++) {
+        	for (int i = 0; i < cols; i++) {
+    		    for (int j = 0; j < rows; j++) {
     		        int starty = (int)Math.round(i * cellSize * (1.0/2));
     		        int startx = (int)Math.round(j * cellSize * (3.0/2));
     		        
@@ -117,7 +115,7 @@ public class DessinGrille extends JPanel {
     		        };
     		        
     		        // Remplissage et dessin de l'hexagone
-    		        Cellule c = a.getCelluleFromPosition(i, j, true);
+    		        Cellule c = a.getCelluleFromPosition(j, i, false);
                     State s = c.getCurrentState();
                     Color col = new Color(s.getR(), s.getG(), s.getB());
                     g.setColor(col);

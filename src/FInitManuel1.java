@@ -1,4 +1,5 @@
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ItemEvent;
 import java.util.ArrayList;
@@ -60,12 +61,10 @@ public class FInitManuel1 extends JFrame implements FInit{
         states.add(selected);
         states.add(unselected);
         switch(dim) {
-        case 1 : auto = new Automate(2,states , null, 3);break;
-        case 2 : auto = new Automate(2,states , null, 3, 3);break;
-        case 3 : auto = new Automate(2,states , null, 3, 3, 3);break;
+        case 1 : auto = new Automate(2,states , null, 3);auto.initCellules(unselected);break;
+        case 2 : auto = new Automate(2,states , null, 3, 3);auto.initCellules(unselected);break;
+        case 3 : auto = new Automate(2,states , null, 3, 3, 3);auto.initCellules3D(unselected);break;
         }
-        auto.initCellules(unselected);
-        auto.print();
         
         elementFenetre();
 
@@ -201,12 +200,20 @@ public class FInitManuel1 extends JFrame implements FInit{
         dg.setFocusable(true);
         dg.addMouseListener(new ClickIniListener(c));
         gridMid.add(dg, BorderLayout.CENTER);
+
         if(dim == 3) {
+        	JLabel labZ = new JLabel("z = 1 : ");
+        	JPanel slider = new JPanel();
+        	slider.setLayout(new FlowLayout());
+        	slider.add(labZ);
+    		
         	SLZ = new JSlider(0, 2, 0);
         	SLZ.addChangeListener(e -> {
         		c.changeZ(SLZ.getValue());
+        		labZ.setText("z = " + (SLZ.getValue() + 1) + " : ");
             });
-        	gridMid.add(SLZ, BorderLayout.SOUTH);
+        	slider.add(SLZ);
+        	gridMid.add(slider, BorderLayout.SOUTH);
         }
         
         add(gridMid, BorderLayout.CENTER);
@@ -283,25 +290,28 @@ public class FInitManuel1 extends JFrame implements FInit{
 	
 	public int[][] createVoisin(){
 		int cpt = 0;
+		for (int k=0 ; k<auto.getHauteur() ; k++){
 		for(int i = 0; i<auto.getLongueur(); i++) {
 			for(int j = 0; j<auto.getLargeur(); j++) {
-				if(auto.getCelluleFromPosition(j, i, false).getCurrentState().toString().equals("selected")) {
+				if(auto.getCelluleFromPosition(j, i, k, false).getCurrentState().toString().equals("selected")) {
 					cpt += 1;
 				}
 			}
 		}
+		}
 		int nbVoisin = cpt;
-		int[][] voisin = new int[cpt][2];
-		
+		int[][] voisin = new int[cpt][3];
+		for (int k=0 ; k<auto.getHauteur() ; k++){
 		for(int i = 0; i<auto.getLongueur(); i++) {
 			for(int j = 0; j<auto.getLargeur(); j++) {
-				if(auto.getCelluleFromPosition(j, i, false).getCurrentState().toString().equals("selected")) {
-					voisin[nbVoisin-cpt][0] = i-1;
-					voisin[nbVoisin-cpt][1] = j-1;
-					
+				if(auto.getCelluleFromPosition(j, i, k, false).getCurrentState().toString().equals("selected")) {
+					voisin[nbVoisin-cpt][1] = i-1;
+					voisin[nbVoisin-cpt][0] = j-1;
+					voisin[nbVoisin-cpt][2] = k-1;
 					cpt--;
 				}
 			}
+		}
 		}
 		return voisin;
 		

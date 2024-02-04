@@ -14,6 +14,7 @@ public class FGrille extends JFrame {
     private Controller c;
     private DessinGrille dg;
     private Simulation sim;
+	private JSlider SLZ;
 
     /**
      * Constructeur de la classe FGrille.
@@ -47,9 +48,27 @@ public class FGrille extends JFrame {
     private void elementFenetre() {
         getContentPane().setLayout(new BorderLayout());
 
+        JPanel gridMid = new JPanel();
+        gridMid.setLayout(new BorderLayout());
         dg = new DessinGrille(cols, rows, gridWidth, gridHeight, sim.getAutomate());
         dg.setFocusable(true);
-        add(dg, BorderLayout.CENTER);
+        gridMid.add(dg, BorderLayout.CENTER);
+        if(sim.getAutomate().getDimension() == 3) {
+        	JLabel labZ = new JLabel("z = 1 : ");
+        	JPanel slider = new JPanel();
+        	slider.setLayout(new FlowLayout());
+        	slider.add(labZ);
+    		c.changeZ(0);
+        	SLZ = new JSlider(0, sim.getAutomate().getHauteur()-1, 0);
+        	SLZ.addChangeListener(e -> {
+        		c.changeZ(SLZ.getValue());
+        		labZ.setText("z = " + (SLZ.getValue() + 1) + " : ");
+            });
+        	slider.add(SLZ);
+        	gridMid.add(slider, BorderLayout.SOUTH);
+        }
+        
+        add(gridMid, BorderLayout.CENTER);
 
         JPanel gridBas = new JPanel();
         gridBas.setLayout(new GridLayout(1, 2));

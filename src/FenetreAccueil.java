@@ -113,6 +113,21 @@ public class FenetreAccueil extends JFrame {
 
         gridBas.add(generer);
         gridBas.add(quitter);
+        
+        cbAuto.addActionListener(e -> {
+        	switch(cbAuto.getSelectedItem().toString()) {
+    		case "Jeu de la vie" : slDim.setValue(2);
+    		slDim.setEnabled(false);
+    		break;
+    		case "Feu de forêt" : slDim.setValue(2);
+    		slDim.setEnabled(false);break;
+    		case "Règle de majorité" :slDim.setValue(2);
+    		slDim.setEnabled(false);break;
+    		case "1D" : slDim.setValue(1);
+    		slDim.setEnabled(false);break;
+    		case "Manuel" : slDim.setEnabled(true);break;
+    		}
+        });
 
         this.add(gridBas, BorderLayout.SOUTH); // Ajout du grid en bas de la fenêtre
     }

@@ -56,7 +56,7 @@ public class FInit1D extends JFrame implements FInit {
         mainPanel.add(createButtonPanel(), BorderLayout.SOUTH);
         getContentPane().add(mainPanel, BorderLayout.CENTER);
 
-        dg = new DessinGrille(rows, cols, gridWidth, gridHeight, sim.getAutomate());
+        dg = new DessinGrille(1, cols, gridWidth, gridHeight, sim.getAutomate());
         dg.setFocusable(true);
         dg.addMouseListener(new ClickIniListener(c));
         mainPanel.add(dg, BorderLayout.CENTER);

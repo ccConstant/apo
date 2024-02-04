@@ -114,7 +114,7 @@ public class Automate {
       for (int k=0 ; k<z ; k++){
         for (int i=0 ; i<longueur; i++) {
           for (int j=0; j<largeur; j++) {
-            int position[]=new int[2];
+            int position[]=new int[3];
             position[0]=j;
             position[1]=i;	
             position[2]=k ; 
@@ -176,6 +176,14 @@ public class Automate {
      */
     public int getLargeur(){
     	return largeur;
+    }
+    
+    /**
+     * Getter de la hauteur du cadre
+     * @return int hauteur du cadre
+     */
+    public int getHauteur(){
+    	return z;
     }
     
     /**
@@ -323,10 +331,10 @@ public class Automate {
     		int abscisse=position[0]+voisins[i][0]; 
     		int ordonnee= position[1]+voisins[i][1] ;
     		int z= position[2]+voisins[i][2]; 
-			//Cellule a=getCelluleFromPosition(abscisse, ordonnee, z, false);  //TODO
-			//if (a!=null) {
-				//cellulesVoisines.add(a);
-			//}
+			Cellule a=getCelluleFromPosition(abscisse, ordonnee, z, false);
+			if (a!=null) {
+				cellulesVoisines.add(a);
+			}
     	}
     	return cellulesVoisines;
     }

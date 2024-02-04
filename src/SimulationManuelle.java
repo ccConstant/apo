@@ -85,7 +85,7 @@ public class SimulationManuelle implements Simulation {
 		if (byDefault==null) {
 			throw new Error("Il n'y a pas d'état par défaut");
 		}
-		automate.initCellules(byDefault);
+		automate.initCellules3D(byDefault);
 	}
 		
 	

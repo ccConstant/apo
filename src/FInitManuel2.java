@@ -1,5 +1,6 @@
 import java.awt.BorderLayout;
 import java.awt.Container;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ItemEvent;
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ public class FInitManuel2 extends JFrame implements FInit{
 	private JComboBox<State> CBState;
 	
 	private Map<String, State> regle;
+	private JSlider SLZ;
     
 	public FInitManuel2(Controller c, int cols, int rows, int[][] voisins, ArrayList<State> arrayList, int z, int dim) {
         this.c = c;
@@ -60,17 +62,14 @@ public class FInitManuel2 extends JFrame implements FInit{
         states.addAll(arrayList);
         states.add(rien);
         switch(dim) {
-        case 1 : auto = new Automate(2,states , null, 3);break;
-        case 2 : auto = new Automate(2,states , null, 3, 3);break;
-        case 3 : auto = new Automate(2,states , null, 3, 3, 3);break;
+        case 1 : auto = new Automate(2,states , null, 3);auto.initCellules(rien);break;
+        case 2 : auto = new Automate(2,states , null, 3, 3);auto.initCellules(rien);break;
+        case 3 : auto = new Automate(2,states , null, 3, 3, 3);auto.initCellules3D(rien);break;
         }
-        auto.initCellules(rien);
         for (int i = 0; i<voisins.length;i++) {
-        	Cellule cell = auto.getCelluleFromPosition( voisins[i][1]+1, voisins[i][0]+1, false);
-        	System.out.println(voisins.length);
+        	Cellule cell = auto.getCelluleFromPosition( voisins[i][0]+1, voisins[i][1]+1, voisins[i][2]+1, false);
         	cell.setCurrentState(def);
         }
-        auto.print();
         
         elementFenetre();
 
@@ -86,12 +85,29 @@ public class FInitManuel2 extends JFrame implements FInit{
         
        
         
-        
-        
+        JPanel gridMid = new JPanel();
+        gridMid.setLayout(new BorderLayout());
         dg = new DessinGrille(auto.getLongueur(), auto.getLargeur(), gridWidth, gridHeight, auto);
         dg.setFocusable(true);
         dg.addMouseListener(new ClickIniListener(c));
-        add(dg, BorderLayout.CENTER);
+        gridMid.add(dg, BorderLayout.CENTER);
+        
+        if(dim == 3) {
+        	JLabel labZ = new JLabel("z = 1 : ");
+        	JPanel slider = new JPanel();
+        	slider.setLayout(new FlowLayout());
+        	slider.add(labZ);
+    		c.changeZ(0);
+        	SLZ = new JSlider(0, 2, 0);
+        	SLZ.addChangeListener(e -> {
+        		c.changeZ(SLZ.getValue());
+        		labZ.setText("z = " + (SLZ.getValue() + 1) + " : ");
+            });
+        	slider.add(SLZ);
+        	gridMid.add(slider, BorderLayout.SOUTH);
+        }
+        
+        add(gridMid, BorderLayout.CENTER);
         
         JPanel grid1 = new JPanel();
         grid1.setLayout(new GridLayout(1, 3, 10, 5));
@@ -135,7 +151,7 @@ public class FInitManuel2 extends JFrame implements FInit{
     private void ajouterRegle() {
     	String key = "";
     	for (int i = 0; i<voisins.length;i++) {
-        	Cellule cell = auto.getCelluleFromPosition( voisins[i][1]+1, voisins[i][0]+1, false);
+        	Cellule cell = auto.getCelluleFromPosition( voisins[i][0]+1, voisins[i][1]+1, voisins[i][2]+1 , false);
         	key += cell.getCurrentState().getState();
         }
     	regle.put(key, (State)CBState.getSelectedItem());

@@ -40,19 +40,11 @@ public class Controller {
 	
 	public void generer(String type) {
 		fa.setVisible(false);
-		if (type.equals("Manuel")) {
-			switch(fa.getDim()) {
-	        case 1 : x = fa.getValX(); y=1; z=1;break;
-	        case 2 :  x = fa.getValX(); y=fa.getValY(); z=1;break;
-	        case 3 :  x = fa.getValX(); y=fa.getValY(); z=fa.getValZ();break;
-	        }
-		} else {
-			x = fa.getValX();
-			y = fa.getValY();
-			z = fa.getValZ();
+		switch(fa.getDim()) {
+        case 1 : x = fa.getValX(); y=1; z=1;break;
+        case 2 :  x = fa.getValX(); y=fa.getValY(); z=1;break;
+        case 3 :  x = fa.getValX(); y=fa.getValY(); z=fa.getValZ();break;
 		}
-		
-
 		
 		switch(type) {
 		case "Jeu de la vie" : fi = new FInitLife(this, x, y);break;
@@ -104,12 +96,10 @@ public class Controller {
 		int y = (yClick-10)/size;
 		if (x < fi.getCols() && y < fi.getRows()) {
 			ArrayList<State> states = auto.getStates();
-			Cellule target = auto.getCelluleFromPosition(x, y, hexa);
+			Cellule target = auto.getCelluleFromPosition(x, y, currentZ, hexa);
 			State next = states.get((states.indexOf(target.getCurrentState())+1)%states.size());
-			System.out.println(next.getR());
 			if(next.getR() == -1) {
 				next = states.get((states.indexOf(target.getCurrentState())+2)%states.size());
-				System.out.println(next);
 			}
 			if(target.getCurrentState().getR() != -1) {
 				target.setCurrentState(next);
@@ -122,6 +112,8 @@ public class Controller {
 	public void lancer() {
 		fi.setVisible(false);
 		fg = new FGrille(this, x, y, fi.getSimu());
+		fg.getDessin().setHexa(hexa);
+		fg.getDessin().repaint();
 		rt.startReload();
 		
 	}
@@ -143,7 +135,7 @@ public class Controller {
 	}
 
 	public void changeZ(int value) {
-		currentZ = value +1;
+		currentZ = value;
 		if(fg == null) {
 			fi.getDessin().setZ(value);
 			fi.getDessin().repaint();

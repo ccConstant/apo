@@ -1,4 +1,5 @@
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ItemEvent;
 import java.util.ArrayList;
@@ -25,7 +26,8 @@ public class FInitManuel3 extends JFrame implements FInit{
 	
 	private Map<String, State> regle;
 	
-	private Simulation sim; 
+	private Simulation sim;
+	private JSlider SLZ; 
     
 	public FInitManuel3(Controller c, int cols, int rows, int[][] voisins, ArrayList<State> arrayList, Map<String, State> regle, int z, int dim) {
         this.c = c;
@@ -49,9 +51,9 @@ public class FInitManuel3 extends JFrame implements FInit{
         
         sim = new SimulationManuelle();
         switch(dim) {
-        case 1 : ((SimulationManuelle)sim).init_simulation(2, arrayList, voisins, cols, regle, voisins.length);break;
+        case 1 : ((SimulationManuelle)sim).init_simulation(1, arrayList, voisins, cols, regle, voisins.length);break;
         case 2 : ((SimulationManuelle)sim).init_simulation(2, arrayList, voisins, cols, rows, regle, voisins.length);break;
-        case 3 : ((SimulationManuelle)sim).init_simulation(2, arrayList, voisins, cols, rows, z, regle, voisins.length);break;
+        case 3 : ((SimulationManuelle)sim).init_simulation(3, arrayList, voisins, cols, rows, z, regle, voisins.length);break;
         }
         
         elementFenetre();
@@ -63,11 +65,28 @@ public class FInitManuel3 extends JFrame implements FInit{
 	public void elementFenetre() {
         this.getContentPane().setLayout(new BorderLayout());
         
-        
+        JPanel gridMid = new JPanel();
+        gridMid.setLayout(new BorderLayout());
         dg = new DessinGrille(rows, cols, gridWidth, gridHeight, sim.getAutomate());
         dg.setFocusable(true);
         dg.addMouseListener(new ClickIniListener(c));
-        add(dg, BorderLayout.CENTER);
+        gridMid.add(dg, BorderLayout.CENTER);
+        if(dim == 3) {
+        	JLabel labZ = new JLabel("z = 1 : ");
+        	JPanel slider = new JPanel();
+        	slider.setLayout(new FlowLayout());
+        	slider.add(labZ);
+    		c.changeZ(0);
+        	SLZ = new JSlider(0, z-1, 0);
+        	SLZ.addChangeListener(e -> {
+        		c.changeZ(SLZ.getValue());
+        		labZ.setText("z = " + (SLZ.getValue() + 1) + " : ");
+            });
+        	slider.add(SLZ);
+        	gridMid.add(slider, BorderLayout.SOUTH);
+        }
+        
+        add(gridMid, BorderLayout.CENTER);
         
         
         JButton opt = new JButton("Lancer la simulation");
