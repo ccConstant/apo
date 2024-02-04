@@ -434,20 +434,27 @@ public class Automate {
     public ArrayList<Cellule> getThreeNeighbours(Cellule c) {
       int[] position = c.getPosition();
       ArrayList<Cellule> neighbours = new ArrayList<>();
-
+  
       // Voisin de gauche
       int leftX = (position[0] - 1 + largeur) % largeur;
-      neighbours.add(getCelluleFromPosition(leftX, position[1], false));
-
+      Cellule leftNeighbour = getCelluleFromPosition(leftX, position[1], false);
+      if (leftNeighbour != null) {
+          neighbours.add(leftNeighbour);
+      }
+  
       // La cellule elle-même
       neighbours.add(c);
-
+  
       // Voisin de droite
       int rightX = (position[0] + 1) % largeur;
-      neighbours.add(getCelluleFromPosition(rightX, position[1], false));
-
+      Cellule rightNeighbour = getCelluleFromPosition(rightX, position[1], false);
+      if (rightNeighbour != null) {
+          neighbours.add(rightNeighbour);
+      }
+  
       return neighbours;
-    }
+  }
+
 
     /**
      * Met à jour toutes les cellules de l'automate en 1D en fonction de la règle spécifiée.
