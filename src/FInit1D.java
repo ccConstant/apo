@@ -3,6 +3,9 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
 
+/**
+ * La classe FInit1D est une JFrame utilisée pour initialiser les paramètres de l'automate 1D.
+ */
 public class FInit1D extends JFrame implements FInit {
     static int HAUTEUR = 230;
     final static int LARGEUR = 640;
@@ -19,22 +22,27 @@ public class FInit1D extends JFrame implements FInit {
     private int gridHeight;
     private JFrame frame;
 
+    /**
+     * Constructeur de la classe FInit1D.
+     *
+     * @param c    Le contrôleur de l'application.
+     * @param cols Le nombre de colonnes de la grille.
+     * @param rows Le nombre de lignes de la grille.
+     */
     public FInit1D(Controller c, int cols, int rows) {
         this.c = c;
         this.rows = rows;
         this.cols = cols;
         this.gridWidth = 400;
         this.gridHeight = 400;
-        
+
         sim = new Simulation1D();
         ((Simulation1D) sim).init_simulation(rows, cols, 0);
 
-        setTitle("Paramètres: Automate feu de forêt");
+        setTitle("Paramètres: Automate 1D");
         setSize(LARGEUR, HAUTEUR);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         getContentPane().setLayout(new BorderLayout());
-
-
 
         l1 = new JLabel("Saisir règle: ");
         ruleField = new JTextField(10);
@@ -46,18 +54,23 @@ public class FInit1D extends JFrame implements FInit {
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.add(createOptionsPanel(), BorderLayout.NORTH);
         mainPanel.add(createButtonPanel(), BorderLayout.SOUTH);
-        getContentPane().add(mainPanel, BorderLayout.CENTER); 
+        getContentPane().add(mainPanel, BorderLayout.CENTER);
 
         dg = new DessinGrille(rows, cols, gridWidth, gridHeight, sim.getAutomate());
         dg.setFocusable(true);
         dg.addMouseListener(new ClickIniListener(c));
-        mainPanel.add(dg, BorderLayout.CENTER); 
+        mainPanel.add(dg, BorderLayout.CENTER);
 
         setLocationRelativeTo(null);
         generateTableData();
         setVisible(true);
     }
 
+    /**
+     * Crée le panneau de boutons.
+     *
+     * @return Le panneau de boutons.
+     */
     private JPanel createButtonPanel() {
         JPanel gridBtn = new JPanel();
         gridBtn.setLayout(new GridLayout(1, 2));
@@ -74,12 +87,17 @@ public class FInit1D extends JFrame implements FInit {
         return gridBtn;
     }
 
+    /**
+     * Crée le panneau d'options.
+     *
+     * @return Le panneau d'options.
+     */
     private JPanel createOptionsPanel() {
         JPanel optionsPanel = new JPanel(new GridBagLayout());
         optionsPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.anchor = GridBagConstraints.LINE_START; 
+        gbc.anchor = GridBagConstraints.LINE_START;
 
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -106,13 +124,15 @@ public class FInit1D extends JFrame implements FInit {
 
         gbc.gridx = 0;
         gbc.gridy = 1;
-        gbc.gridwidth = 3; 
+        gbc.gridwidth = 3;
         optionsPanel.add(scrollPane, gbc);
 
         return optionsPanel;
     }
 
-
+    /**
+     * Génère les données du tableau en fonction de la règle saisie.
+     */
     private static void generateTableData() {
         String rule = ruleField.getText();
         int ruleDecimal = Integer.parseInt(rule);
@@ -128,18 +148,22 @@ public class FInit1D extends JFrame implements FInit {
         table.setModel(model);
     }
 
+    @Override
     public DessinGrille getDessin() {
         return dg;
     }
 
+    @Override
     public Simulation getSimu() {
         return sim;
     }
 
+    @Override
     public int getRows() {
         return rows;
     }
 
+    @Override
     public int getCols() {
         return cols;
     }

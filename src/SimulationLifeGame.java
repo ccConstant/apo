@@ -25,7 +25,6 @@ public class SimulationLifeGame implements Simulation {
 	}
 	
 	
-
 	/** 
      * Rechargement des états des cellules en suivant le principe du jeu de la vie et affichage de l'automate
      */

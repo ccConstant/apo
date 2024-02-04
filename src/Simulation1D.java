@@ -3,9 +3,13 @@ import java.util.ArrayList;
 public class Simulation1D implements Simulation {
     Automate automate;
     int regle;
+    int largeur;
+    int longueur;
    
     public void init_simulation(int longueur, int largeur, int regle) {
         this.regle=regle;
+        this.largeur = largeur;
+        this.longueur = longueur;
 
        
         State zero = new State("0", 80, 80, 80, false);
