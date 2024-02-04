@@ -190,6 +190,30 @@ public class Automate {
     }
     
     /**
+     * Getter d'une cellule de l'automate
+     * @param x abscisse de la cellule à récupérer
+     * @param y ordonnée de la cellule à récupérer
+     * @param z hauteur de la cellule à récupérer
+     * @return Cellule une cellule de l'automate
+     */
+    public Cellule getCelluleFromPosition(int x, int y,int z, boolean hexa) {
+    	if (hexa) {
+    		if (x >=0 && y >=0 && x<largeur*2 && y<longueur ) {
+    			int i= x/2 ; 
+        		return cellules.get(y*largeur+i);
+        	}else {
+        		return null ; 
+        	}
+    	}
+    	if (x >=0 && y >=0 && x<largeur && y<longueur && z>=0 && z<this.z) {
+    		return cellules.get(z * (largeur * this.z)+y*largeur+x);
+    	}else {
+    		return null ; 
+    	}
+    	
+    }
+    
+    /**
      * Getter de la cellule située au nord de la cellule traitée
      * @param x abscisse de la cellule dont on cherche la voisine du nord
      * @param y ordonnée de la cellule dont on cherche la voisine du nord 

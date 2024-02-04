@@ -35,6 +35,7 @@ public class FInitManuel1 extends JFrame implements FInit{
 	private JTextField TFb3;
 	private JCheckBox CBdef3;
 	private JCheckBox CBe3;
+	private JSlider SLZ;
     
     
 	public FInitManuel1(Controller c, int cols, int rows, int z, int d) {
@@ -193,11 +194,23 @@ public class FInitManuel1 extends JFrame implements FInit{
         
         
         add(etats, BorderLayout.NORTH);
+        
+        JPanel gridMid = new JPanel();
+        gridMid.setLayout(new BorderLayout());
         dg = new DessinGrille(auto.getLongueur(), auto.getLargeur(), gridWidth, gridHeight, auto);
         dg.setFocusable(true);
         dg.addMouseListener(new ClickIniListener(c));
-        add(dg, BorderLayout.CENTER);
-
+        gridMid.add(dg, BorderLayout.CENTER);
+        if(dim == 3) {
+        	SLZ = new JSlider(0, 2, 0);
+        	SLZ.addChangeListener(e -> {
+        		c.changeZ(SLZ.getValue());
+            });
+        	gridMid.add(SLZ, BorderLayout.SOUTH);
+        }
+        
+        add(gridMid, BorderLayout.CENTER);
+        
         JButton opt = new JButton("Lancer la simulation");
         opt.addActionListener(e -> {
             c.nextManuel(createVoisin(), createStates() );

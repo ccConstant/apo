@@ -18,6 +18,7 @@ public class DessinGrille extends JPanel {
     private boolean hexa; // Indique si la grille est hexagonale ou non
 
     private int cellSize; // Taille d'une cellule dans la grille
+	private int z;
     
     /**
      * Constructeur de la classe DessinGrille.
@@ -36,6 +37,7 @@ public class DessinGrille extends JPanel {
         this.gridHeight = gridHeight;
         this.a = a;
         hexa = false;
+        this.z = 0;
     }
 
     /**
@@ -62,7 +64,7 @@ public class DessinGrille extends JPanel {
                     int y = startY + i * cellSize;
                     System.out.print(j);
                     System.out.println(" " + i);
-                	Cellule c = a.getCelluleFromPosition(j, i, hexa);
+                	Cellule c = a.getCelluleFromPosition(j, i, z, hexa);
                     State s = c.getCurrentState();
                     if(s.getR() != -1) {
                     	Color col = new Color(s.getR(), s.getG(), s.getB());
@@ -177,5 +179,9 @@ public class DessinGrille extends JPanel {
     	hexa = b;
     	this.repaint(); // Redessiner la grille avec le nouvel état hexagonal
     }
+
+	public void setZ(int newZ) {
+		z = newZ;
+	}
     
 }

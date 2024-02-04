@@ -16,6 +16,8 @@ public class Controller {
 	private int y;
 	private int z;
 	
+	private int currentZ;
+	
 	public Controller() {
 		fa = new FenetreAccueil(this);
 		hexa = false;
@@ -138,6 +140,18 @@ public class Controller {
 		fi.setVisible(false);
 		fi = new FInitManuel3(this,x, y , voisins, arrayList, regle, z, fa.getDim());
 		fi.setVisible(true);
+	}
+
+	public void changeZ(int value) {
+		currentZ = value +1;
+		if(fg == null) {
+			fi.getDessin().setZ(value);
+			fi.getDessin().repaint();
+		} else {
+			fg.getDessin().setZ(value);
+			fg.getDessin().repaint();
+		}
+		
 	}
 	
 	

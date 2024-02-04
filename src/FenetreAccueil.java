@@ -49,7 +49,9 @@ public class FenetreAccueil extends JFrame {
         // Slider pour choisir la dimension de l'automate
         JLabel lbDim = new JLabel("Dimension de l'automate : 1", SwingConstants.CENTER);
         slDim = new JSlider(1, 3, 1); // Slider avec des valeurs de 1 à 3, valeur par défaut : 1
-
+        slDim.addChangeListener(e -> {
+    		lbDim.setText("Dimension de l'automate : " + slDim.getValue());
+        });
         gridMid.add(lbDim);
         gridMid.add(slDim);
 
